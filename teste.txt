@@ -2,8 +2,8 @@ SECTION TEXT
 INPUT OLD_DATA			; comentario 1
 LOAD OLD_DATA			; comentário 2
 L1: DIV DOIS			; comentario 3
-STORE  NEW_DATA			; comenta mais
-MULT DOIS
+STORE  new_data			; coloquei new_data minusculo
+mult DOIS			; coloquei mult minusculo
 STORE TMP_DATA
 LOAD OLD_DATA
 SUB TMP_DATA
