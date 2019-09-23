@@ -5,27 +5,61 @@
 
 using namespace std;
 
-Assembler::Assembler() {
+/**************
+ * Construtor *
+ *************/
+Assembler::Assembler(string filePath) {
+    this->filePath = filePath;          // filePath da instancia recebe o filePath informado ao instanciar o objeto
 }
 
 
+/*************
+ * Destrutor *
+ ************/
+Assembler::~Assembler() {
+}
+
+
+/***********************************
+ * Funcao que monta o codigo fonte *
+ **********************************/
+void Assembler::Assemble() {
+    this->readFile();           // Chama a funcao de leitura do codigo
+}
+
+
+/**********************************************
+ * Funcao que le o arquivo com o codigo fonte *
+ *********************************************/
 void Assembler::readFile() {
 
     string line;
-    ifstream myFile;//("bin.asm.txt");
-    myFile.open("bin.asm.txt");
+    //ifstream myFile("teste.txt");
+    ifstream myFile(this->filePath);
 
     if(myFile.is_open()){
         while(!myFile.eof()){
-            getline(myFile, line);      // Scans each line
-            cout << line << endl;
+            getline(myFile, line);        // Le cada linha do codigo fonte
+            cout << line << endl;               // Printa a linha lida
+            this->Padrao(line);             // Chama a funcao para retirar comentarios
+            cout << line << endl << endl;      // Printa a linha sem comentarios
         }
-        myFile.close();     // Close file
+        myFile.close();     // Fecha o arquivo com o codigo fonte
     }
     else
         cout << "Unable to open file" << endl;
 }
 
 
-Assembler::~Assembler() {
+/***********************************************************************
+ * Funcao que retira comentarios e ignora letras maiusculas/minusculas *
+ **********************************************************************/
+void Assembler::Padrao(string& linha) {
+    int i;
+
+        linha = linha.substr(0, linha.find(";"));       // Retira os comentarios
+
+    for (i = 0; i < linha.length(); i++) {
+        linha.at(i) = toupper(linha.at(i));         // Coloca tudo em maiusculo
+    }
 }

@@ -2,11 +2,10 @@
 
 using namespace std;
 
-int main() {
-    //Assembler* assembler = new Assembler;
-    //assembler->readFile();
+int main(int argc, char* arv[]) {
 
-    Assembler::readFile();
+    Assembler* assembler = new Assembler("teste.txt");
+    assembler->Assemble();
 
     return 0;
 }
