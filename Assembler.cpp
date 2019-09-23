@@ -23,7 +23,7 @@ Assembler::~Assembler() {
 /***********************************
  * Funcao que monta o codigo fonte *
  **********************************/
-void Assembler::Assemble() {
+void Assembler::assemble() {
     this->readFile();           // Chama a funcao de leitura do codigo
 }
 
@@ -32,19 +32,31 @@ void Assembler::Assemble() {
  * Funcao que le o arquivo com o codigo fonte *
  *********************************************/
 void Assembler::readFile() {
-
+    int i;
     string line;
-    //ifstream myFile("teste.txt");
-    ifstream myFile(this->filePath);
+    ofstream preProcessado;
+    ifstream codigoFonte(this->filePath);           // Abre o arquivo com o codigo fonte
 
-    if(myFile.is_open()){
-        while(!myFile.eof()){
-            getline(myFile, line);        // Le cada linha do codigo fonte
-            cout << line << endl;               // Printa a linha lida
-            this->Padrao(line);             // Chama a funcao para retirar comentarios
-            cout << line << endl << endl;      // Printa a linha sem comentarios
+    // Verifica se o arquivo com o codigo fonte foi, de fato, aberto
+    if(codigoFonte.is_open()){
+        preProcessado.open("Codigo Pre-processado.txt");    // Cria o arquivo texto que contera o codigo pre-processado
+
+        while(!codigoFonte.eof()){
+            getline(codigoFonte, line);        // Le cada linha do codigo fonte
+            cout << line << endl;                     // Printa a linha lida
+
+            this->padrao(line);                   // Chama a funcao para retirar comentarios
+            cout << line << endl << endl;            // Printa a linha lida sem comentarios e em maiusculo
+
+
+            // Verifica se o arquivo com o codigo pre-processado foi aberto
+            if(preProcessado.is_open()) {
+                preProcessado << line << endl;       // Escreve a linha no arquivo de codigo pre-processado
+            }
+            //this->writePreProcesasdo();
         }
-        myFile.close();     // Fecha o arquivo com o codigo fonte
+        codigoFonte.close();     // Fecha o arquivo com o codigo fonte
+        preProcessado.close();   // Fecha o arquivo com o codigo pre-processado
     }
     else
         cout << "Unable to open file" << endl;
@@ -54,12 +66,29 @@ void Assembler::readFile() {
 /***********************************************************************
  * Funcao que retira comentarios e ignora letras maiusculas/minusculas *
  **********************************************************************/
-void Assembler::Padrao(string& linha) {
+void Assembler::padrao(string& linha) {
     int i;
 
-        linha = linha.substr(0, linha.find(";"));       // Retira os comentarios
+    linha = linha.substr(0, linha.find(";"));       // Retira os comentarios
 
     for (i = 0; i < linha.length(); i++) {
-        linha.at(i) = toupper(linha.at(i));         // Coloca tudo em maiusculo
+        linha.at(i) = toupper(linha.at(i));         // Coloca a linha em maiusculo
     }
 }
+
+
+/*******************************************************************
+ * Funcao que cria e escreve o arquivo com o codigo pre-processado *
+ ******************************************************************/
+/*void Assembler::writePreProcesasdo() {
+    ofstream preProcessado;//("Codigo Pre-processado.txt");
+    preProcessado.open("Codigo Pre-processado.txt");
+
+    if(preProcessado.is_open()){
+        preProcessado << "asd" <<  endl;
+    }
+
+    preProcessado.close();   // Fecha o arquivo com o codigo pre-processado
+
+}
+*/
