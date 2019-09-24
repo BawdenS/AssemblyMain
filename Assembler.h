@@ -2,7 +2,7 @@
 #define TRABALHO1_ASSEMBLER_H
 
 #include <string>
-
+#include <vector>
 using namespace std;
 
 class Assembler {
@@ -14,8 +14,11 @@ public:
 private:
     void readFile();                // Funcao para leitura do codigo fonte
     void padrao(string& linha);     // Funcao para retirar comentarios e ignorar letras maiusculas/minusculas
-   //void writePreProcesasdo();      // Funcao para criar e escrever o arquivo com o codigo pre-processado
-
+	void CriaListas();				// Funcao para criar listas de OPcode e Diretivas de maneira vector de strings
+	void CriaTabeladeUso(string);	// Funcao para criar lista de usos que lê de palavra em palavra comparando com a ListadeOPcode e Lista de Diretivas
+	//void writePreProcesasdo();      // Funcao para criar e escrever o arquivo com o codigo pre-processado
+	vector<string> ListadeOPcode;
+	vector<string> ListadeDiretivas;
     string filePath;                // Variavel para ser o caminho do arquivo de cada instancia do montador
 };
 

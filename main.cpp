@@ -5,7 +5,7 @@
 #           Alunos                                  Matriculas      #
 #                                                                   #
 #   Fernando Sobral Nobrega                         15/0034911      #
-#   Matheus Bawden Silverio Castro                  15/0034911      #
+#   Matheus Bawden Silverio Castro                  15/0141017      #
 #                                                                   #
 #                                                                   #
 ###################################################################*/
@@ -16,8 +16,8 @@ using namespace std;
 
 int main(int argc, char* arv[]) {
 
-    Assembler* assembler = new Assembler("teste.txt");
-    assembler->assemble();
+	Assembler* assembler = new Assembler("teste.txt");
+	assembler->assemble();
 
-    return 0;
+	return 0;
 }
