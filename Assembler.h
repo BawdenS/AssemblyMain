@@ -17,7 +17,8 @@ private:
 	void CriaListas();				// Funcao para criar listas de OPcode e Diretivas de maneira vector de strings
 	void CriaTabeladeUso(string);	// Funcao para criar lista de usos que l? de palavra em palavra comparando com a ListadeOPcode e Lista de Diretivas
 	//void writePreProcesasdo();      // Funcao para criar e escrever o arquivo com o codigo pre-processado
-	void separaPalavras(string liinha);
+	void separaPalavras(string linha, string palavras[], int* opcode);          // Funcao que separa as palavras de cada linha
+	void checaMneumonico(string* palavras, int* opcode);
 
 	vector<string> ListadeOPcode;
 	vector<string> ListadeDiretivas;
