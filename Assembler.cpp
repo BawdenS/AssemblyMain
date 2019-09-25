@@ -6,6 +6,7 @@
 #include <sstream>
 using namespace std;
 
+
 /**************
  * Construtor *
  *************/
@@ -25,20 +26,22 @@ Assembler::~Assembler() {
  * Funcao que monta o codigo fonte *
  **********************************/
 void Assembler::assemble() {
-    this->readFile();           // Chama a funcao de leitura do codigo
+    this->passagemZero();           // Chama a funcao de leitura do codigo
 }
 
 
 /**********************************************
  * Funcao que le o arquivo com o codigo fonte *
  *********************************************/
-void Assembler::readFile() {
+void Assembler::passagemZero() {
     
 	int i;
     string line;
     ofstream preProcessado;
     ifstream codigoFonte(this->filePath);           // Abre o arquivo com o codigo fonte
-	this->CriaListas();//cria lista de OPcodes e Diretivas
+
+    this->CriaListas();//cria lista de OPcodes e Diretivas
+
     // Verifica se o arquivo com o codigo fonte foi, de fato, aberto
     if(codigoFonte.is_open()){
         preProcessado.open("Codigo Pre-processado.txt");    // Cria o arquivo texto que contera o codigo pre-processado
@@ -48,8 +51,9 @@ void Assembler::readFile() {
             //cout << line << endl;                     // Printa a linha lida
 
             this->padrao(line);                   // Chama a funcao para retirar comentarios
-            cout << line << endl;            // Printa a linha lida sem comentarios e em maiusculo
-			
+            cout << line << endl;                   // Printa a linha lida sem comentarios e em maiusculo
+
+            this->separaPalavras(line);             // Chama a funcao que separa cada palavra
 
             // Verifica se o arquivo com o codigo pre-processado foi aberto
             if(preProcessado.is_open()) {
@@ -60,11 +64,7 @@ void Assembler::readFile() {
 		
         codigoFonte.close();     // Fecha o arquivo com o codigo fonte
         preProcessado.close();   // Fecha o arquivo com o codigo pre-processado
-	
-	
-	
-	
-	
+
 	}
     else
         cout << "Unable to open file" << endl;
@@ -142,10 +142,12 @@ void Assembler::CriaTabeladeUso(string linha)
 				break;
 			}
 		}
+
 		if (i == 20) 
 		{
 			break;
 		}
+
 		for (i = 0; i < this->ListadeDiretivas.size(); i++)
 		{
 			if (word == this->ListadeDiretivas.at(i)) {
@@ -153,17 +155,34 @@ void Assembler::CriaTabeladeUso(string linha)
 				break;
 			}
 		}
+
 		if (i == 20)
 		{
 			break;
 		}
-		//Se chegar a esta linha a palavra lida com certeza nao é um elemento da tabela de Diretivas ou de OPcode
-		//Precisamos verificar se o elemento têm ":", se possuir ":" é um elemento já definido e precisamos salvar a posicao atual
-		//posicao atual estara no elemento this->posicao e sera salvado no vetor this->endereco.push_back() e será necessario
+		//Se chegar a esta linha a palavra lida com certeza nao eh um elemento da tabela de Diretivas ou de OPcode
+		//Precisamos verificar se o elemento tem ":", se possuir ":" eh um elemento ja definido e precisamos salvar a posicao atual
+		//posicao atual estara no elemento this->posicao e sera salvado no vetor this->endereco.push_back() e sera necessario
 		//conferir a lista de pendencias para esse elemento
 		
 		//se for
 
 	}
 
+}
+
+
+/***********************************************
+ * Funcao que separa as palavras de cada linha *
+ **********************************************/
+void Assembler::separaPalavras(string linha){
+    string word;
+
+    // Pega cada palavra separada por espaco
+    istringstream iss(linha);
+    while (iss >> word)
+    {
+        cout << " | "<< word << " | ";      // Printa cada palavra sepaarada
+    }
+    cout << endl;                           // Printa uma quebra de linha
 }
