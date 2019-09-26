@@ -16,14 +16,15 @@ private:
     void padrao(string& linha);     // Funcao para retirar comentarios e ignorar letras maiusculas/minusculas
 	void CriaListas();				// Funcao para criar listas de OPcode e Diretivas de maneira vector de strings
 	void CriaTabeladeUso(string);	// Funcao para criar lista de usos que l? de palavra em palavra comparando com a ListadeOPcode e Lista de Diretivas
-	//void writePreProcesasdo();      // Funcao para criar e escrever o arquivo com o codigo pre-processado
 	void separaPalavras(string linha, string* palavras, int* opcode);          // Funcao que separa as palavras de cada linha
 	void checaMneumonico(string* palavras, int* opcode);
 
 	vector<string> ListadeOPcode;
 	vector<string> ListadeDiretivas;
+	vector<int> opcodes;
     string filePath;                // Variavel para ser o caminho do arquivo de cada instancia do montador
 };
 
 
 #endif //TRABALHO1_ASSEMBLER_H
+

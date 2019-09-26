@@ -39,12 +39,15 @@ void Assembler::passagemZero() {
 	vector<string> listatempvalor;
 	vector<string> vetorpalavras;
 
-	string palavras,apoio,saida;
-	int flagsalvalinha= 1; 
+	string palavras, apoio, saida;
+	int flagsalvalinha = 1;
 
 	int i,j, pc = 1, opcode;
     string line;
+    bool escrevePreProcessado = false;
+
     ofstream preProcessado;
+    ofstream codigoObjeto;
     ifstream codigoFonte(this->filePath);           // Abre o arquivo com o codigo fonte
 
     this->CriaListas();//cria lista de OPcodes e Diretivas
@@ -52,89 +55,101 @@ void Assembler::passagemZero() {
     // Verifica se o arquivo com o codigo fonte foi, de fato, aberto
     if(codigoFonte.is_open()){
         preProcessado.open("Codigo Pre-processado.txt");    // Cria o arquivo texto que contera o codigo pre-processado
+        codigoObjeto.open("Codigo Objeto.txt");    // Cria o arquivo texto que contera o codigo objeto
 
         while(!codigoFonte.eof()){
             getline(codigoFonte, line);        // Le cada linha do codigo fonte
-            //cout << line << endl;                     // Printa a linha lida
 
             this->padrao(line);                   // Chama a funcao para retirar comentarios
             //cout << pc << " " << line << endl;       // Printa o contador de programa e a linha lida sem comentarios e em maiusculo
-            //pc++;                                    // Incrementa o contador de progama
+            //pc++;                                    // Incrementa o contador de progama a cada linha do codigo fonte
 
             //this->separaPalavras(line, words, &opcode);             // Chama a funcao que separa cada palavras
-			
-			istringstream iss(line);//coloca cada palavra em um vetor.
+
+
+            // Coloca cada palavra em um vetor de palavras.
+			istringstream iss(line);
 			while (iss >> palavras)
 			{
 				vetorpalavras.push_back(palavras);
 			}
-			
-			for (i = 0; i < vetorpalavras.size();i++) //cria lista temporaria de EQU
+
+            // Cria lista temporaria de rotulos com EQU
+			for (i = 0; i < vetorpalavras.size();i++)
 			{
 				if (vetorpalavras.at(i) == "EQU") 
 				{
 					apoio = vetorpalavras.at(i - 1);
-					
 					apoio = apoio.substr(0,apoio.find(":"));
 					listatemp.push_back(apoio);
 					listatempvalor.push_back(vetorpalavras.at(i + 1));
-					
 				}
-			
 			}
-			
-			for (i = 0; i < vetorpalavras.size(); i++) // Procura valor label de EQU e substitui
+
+            // Procura valor label de EQU e substitui
+			for (i = 0; i < vetorpalavras.size(); i++)
 			{
 				for (j = 0;j < listatemp.size();j++) 
 				{
-
-					if(vetorpalavras.at(i) == listatemp.at(j)) 
+					if(vetorpalavras.at(i) == listatemp.at(j))
 					{
 						vetorpalavras.at(i) = listatempvalor.at(j);
 					}
 				}
-
 			}
-			apoio.clear();//Recria linha com valores substituidos
+
+			// Apaga a linha
+			apoio.clear();
+
+            //  Recria linha com valores substituidos
 			for (i = 0; i < vetorpalavras.size();i++) {
 				apoio += vetorpalavras.at(i) + " ";
-			
 			}
-			//logica de salvar a linha correta
+
+			// Logica para salvar a linha correta no arquivo com o codigo pre-processado
 			if (apoio.find("EQU") !=std::string::npos) {
 				flagsalvalinha = 0;
 			}
 			if (apoio.find("IF") != std::string::npos) {
 				flagsalvalinha = 0;
-				//cout << line << endl;
-				
 			}
 			if (apoio.find("IF 0") != std::string::npos) {
-				
 				flagsalvalinha = -1;
 			}
+
+			// Escreve no arquivo pre-processado se a linha nao tem IF/EQU ou se a linha anterior nao era IF 0
 			if (flagsalvalinha == 1) {
 				saida = apoio + "\n";
-				preProcessado << saida;
+                this->separaPalavras(saida, words, &opcode);             // Chama a funcao que separa cada palavras
+                if(preProcessado.is_open()) {
+                    preProcessado << saida;        // Escreve a linha certa no arquivo pre-processado
+                }
 			}
-			apoio.empty();
+
+			apoio.empty(); // todo - isso aqui soh retorna se apoio esta vazio ou nao (true or false)
 			flagsalvalinha++;
+
 			if (flagsalvalinha > 1) {
 				flagsalvalinha = 1;
 			}
+
 			vetorpalavras.clear();
-            //cout << "OPCODE = " << opcode << endl;    // Isso aqui printa nas linhas de deritivas sem opcode tbm
 
             // Verifica se o arquivo com o codigo pre-processado foi aberto
            /* if(preProcessado.is_open()) {
                 preProcessado << line << endl;       // Escreve a linha no arquivo de codigo pre-processado
             }
 			*/
-            //this->writePreProcesasdo();
         }
+
+        for(i = 0; i < opcodes.size(); i++){
+            codigoObjeto << opcodes.at(i) << " ";
+        }
+
 		//preProcessado << saida;
         codigoFonte.close();     // Fecha o arquivo com o codigo fonte
         preProcessado.close();   // Fecha o arquivo com o codigo pre-processado
+        codigoObjeto.close();    // Fecha o arquivo com o codigo objeto
 
 	}
     else
@@ -154,23 +169,6 @@ void Assembler::padrao(string& linha) {
         linha.at(i) = toupper(linha.at(i));         // Coloca a linha em maiusculo
     }
 }
-
-
-/*******************************************************************
- * Funcao que cria e escreve o arquivo com o codigo pre-processado *
- ******************************************************************/
-/*void Assembler::writePreProcesasdo() {
-    ofstream preProcessado;//("Codigo Pre-processado.txt");
-    preProcessado.open("Codigo Pre-processado.txt");
-
-    if(preProcessado.is_open()){
-        preProcessado << "asd" <<  endl;
-    }
-
-    preProcessado.close();   // Fecha o arquivo com o codigo pre-processado
-
-}
-*/
 
 
 /*******************************************************************
@@ -199,6 +197,10 @@ void Assembler::CriaListas() {
 	this->ListadeOPcode.push_back("STOP");
 }
 
+
+/***********************************
+ * Funcao que cria a tabela de uso *
+ **********************************/
 void Assembler::CriaTabeladeUso(string linha) 
 {
 	int i;
@@ -260,21 +262,12 @@ void Assembler::separaPalavras(string linha, string* palavras, int* opcode){
     istringstream iss(linha);
 	while (iss >> word)
 	{
-
-        //cout << " | "<< word << " | ";      // Printa cada palavra sepaarada
         palavras[i] = word;             // Coloca cada palavra no vetor de palavras
         i++;
     }
 
-    //checaMneumonico(palavras, opcode);            // Chama a funcao que checa se eh uma diretiva ou instrucao
+    checaMneumonico(palavras, opcode);            // Chama a funcao que checa se eh uma diretiva ou instrucao
 
-    //cout << endl;                           // Printa uma quebra de
-/*
-    for(i = 0; i < 4; i++){
-        cout << " ( " << palavras[i] << " ) ";
-    }
-    cout << endl;                           // Printa uma quebra de linha
-*/
 }
 
 
@@ -283,165 +276,194 @@ void Assembler::separaPalavras(string linha, string* palavras, int* opcode){
  ************************************************/
 void Assembler::checaMneumonico(string* palavras, int* opcode) {
     if(palavras[0] == "SECTION"){
-        if(palavras[1] == "TEXT")
-            cout << "        EH DIRETIVA SECTION TEXT!" << endl;
-        else if(palavras[1] == "DATA")
-            cout << "        EH DIRETIVA SECTION DATA!" << endl;
+        if(palavras[1] == "TEXT"){
+            //cout << "        EH DIRETIVA SECTION TEXT!" << endl;
+        }
+        else if(palavras[1] == "DATA"){
+            //cout << "        EH DIRETIVA SECTION DATA!" << endl;
+
+        }
     }
     else if(palavras[0] == "SPACE"){
         *opcode = 00;
+        opcodes.emplace_back(*opcode);
 
         if(palavras[1] != "NULL"){
-            cout << "        EH DIRETIVA SPACE E VALOR: " << palavras[1] << " OPCODE = " << *opcode << *opcode << endl;
+            //cout << "        EH DIRETIVA SPACE E VALOR: " << palavras[1] << " OPCODE = " << *opcode << *opcode << endl;
         }
         else{
-            cout << "        EH DIRETIVA SPACE E VALOR: 1 OPCODE = " << *opcode << *opcode << endl;
+            //cout << "        EH DIRETIVA SPACE E VALOR: 1 OPCODE = " << *opcode << *opcode << endl;
         }
     }
     else if(palavras[0] == "CONST"){
-        cout << "        EH DIRETIVA CONST  E VALOR: " << palavras[1] << endl;
+        //cout << "        EH DIRETIVA CONST  E VALOR: " << palavras[1] << endl;
     }
     else if(palavras[0] == "EQU"){
-        cout << "        EH DIRETIVA EQU  E VALOR: " << palavras[1] << endl;
+        //cout << "        EH DIRETIVA EQU  E VALOR: " << palavras[1] << endl;
     }
     else if(palavras[0] == "IF"){
-        cout << "        EH DIRETIVA IF!" << endl;
+        //cout << "        EH DIRETIVA IF!" << endl;
     }
     else if(palavras[0] == "ADD"){
         *opcode = 1;
-        cout << "        EH INSTRUCAO ADD!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO ADD!     OPCODE = " << *opcode << endl;
     }
     else if(palavras[0] == "SUB"){
         *opcode = 2;
-        cout << "        EH INSTRUCAO SUB!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO SUB!     OPCODE = " << *opcode << endl;
     }
     else if(palavras[0] == "MULT"){
         *opcode = 3;
-        cout << "        EH INSTRUCAO MULT!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO MULT!     OPCODE = " << *opcode << endl;
     }
     else if(palavras[0] == "DIV"){
         *opcode = 4;
-        cout << "        EH INSTRUCAO DIV!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO DIV!     OPCODE = " << *opcode << endl;
     }
     else if(palavras[0] == "JMP"){
         *opcode = 5;
-        cout << "        EH INSTRUCAO JMP!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO JMP!     OPCODE = " << *opcode << endl;
     }
     else if(palavras[0] == "JMPN"){
         *opcode = 6;
-        cout << "        EH INSTRUCAO JMPN!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO JMPN!     OPCODE = " << *opcode << endl;
     }
     else if(palavras[0] == "JMPP"){
         *opcode = 7;
-        cout << "        EH INSTRUCAO JMPP!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO JMPP!     OPCODE = " << *opcode << endl;
     }
     else if(palavras[0] == "JMPZ"){
         *opcode = 8;
-        cout << "        EH INSTRUCAO JMPZ!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO JMPZ!     OPCODE = " << *opcode << endl;
     }
     else if(palavras[0] == "COPY"){
         *opcode = 9;
-        cout << "        EH INSTRUCAO COPY!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO COPY!     OPCODE = " << *opcode << endl;
     }
     else if(palavras[0] == "LOAD"){
         *opcode = 10;
-        cout << "        EH INSTRUCAO LOAD!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO LOAD!     OPCODE = " << *opcode << endl;
     }
     else if(palavras[0] == "STORE"){
         *opcode = 11;
-        cout << "        EH INSTRUCAO STORE!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO STORE!     OPCODE = " << *opcode << endl;
     }
     else if(palavras[0] == "INPUT"){
         *opcode = 12;
-        cout << "        EH INSTRUCAO INPUT!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO INPUT!     OPCODE = " << *opcode << endl;
     }
     else if(palavras[0] == "OUTPUT"){
         *opcode = 13;
-        cout << "        EH INSTRUCAO OUTPUT!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO OUTPUT!     OPCODE = " << *opcode << endl;
     }
     else if(palavras[0] == "STOP"){
         *opcode = 14;
-        cout << "        EH INSTRUCAO STOP!     OPCODE = " << *opcode << endl;
+        opcodes.emplace_back(*opcode);
+        //cout << "        EH INSTRUCAO STOP!     OPCODE = " << *opcode << endl;
     }
     else{
-        // todo - checar o ':'
-        cout << "        NAO EH MNEUMONICO, EH SIMBOLO! ";
+        //cout << "        NAO EH MNEUMONICO, EH SIMBOLO! ";
         if(palavras[1] == "SPACE"){
             *opcode = 00;
+            opcodes.emplace_back(*opcode);
             if(palavras[2] != "NULL"){
-                cout << "        EH DIRETIVA SPACE E VALOR: " << palavras[1] << " OPCODE = " << *opcode << *opcode << endl;
+                //cout << "        EH DIRETIVA SPACE E VALOR: " << palavras[1] << " OPCODE = " << *opcode << *opcode << endl;
             }
             else{
-                cout << "        EH DIRETIVA SPACE E VALOR: 1 OPCODE = " << *opcode << *opcode << endl;
+                //cout << "        EH DIRETIVA SPACE E VALOR: 1 OPCODE = " << *opcode << *opcode << endl;
             }
         }
         else if(palavras[1] == "CONST"){
-            cout << "SEGUIDO DE DIRETIVA CONST E VALOR: " << palavras[2] << endl;
+            //cout << "SEGUIDO DE DIRETIVA CONST E VALOR: " << palavras[2] << endl;
         }
         else if(palavras[1] == "EQU"){
-            cout << "SEGUIDO DE DIRETIVA EQU  E VALOR: " << palavras[2] << endl;
-
-
-
+            //cout << "SEGUIDO DE DIRETIVA EQU  E VALOR: " << palavras[2] << endl;
         }
         else if(palavras[1] == "IF"){
-            cout << "SEGUIDO DE DIRETIVA IF!" << endl;
+            //cout << "SEGUIDO DE DIRETIVA IF!" << endl;
         }
         else if(palavras[1] == "ADD"){
             *opcode = 1;
-            cout << "        EH INSTRUCAO ADD!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO ADD!     OPCODE = " << *opcode << endl;
         }
         else if(palavras[1] == "SUB"){
             *opcode = 2;
-            cout << "        EH INSTRUCAO SUB!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO SUB!     OPCODE = " << *opcode << endl;
         }
         else if(palavras[1] == "MULT"){
             *opcode = 3;
-            cout << "        EH INSTRUCAO MULT!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO MULT!     OPCODE = " << *opcode << endl;
         }
         else if(palavras[1] == "DIV"){
             *opcode = 4;
-            cout << "        EH INSTRUCAO DIV!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO DIV!     OPCODE = " << *opcode << endl;
         }
         else if(palavras[1] == "JMP"){
             *opcode = 5;
-            cout << "        EH INSTRUCAO JMP!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO JMP!     OPCODE = " << *opcode << endl;
         }
         else if(palavras[1] == "JMPN"){
             *opcode = 6;
-            cout << "        EH INSTRUCAO JMPN!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO JMPN!     OPCODE = " << *opcode << endl;
         }
         else if(palavras[1] == "JMPP"){
             *opcode = 7;
-            cout << "        EH INSTRUCAO JMPP!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO JMPP!     OPCODE = " << *opcode << endl;
         }
         else if(palavras[1] == "JMPZ"){
             *opcode = 8;
-            cout << "        EH INSTRUCAO JMPZ!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO JMPZ!     OPCODE = " << *opcode << endl;
         }
         else if(palavras[1] == "COPY"){
             *opcode = 9;
-            cout << "        EH INSTRUCAO COPY!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO COPY!     OPCODE = " << *opcode << endl;
         }
         else if(palavras[1] == "LOAD"){
             *opcode = 10;
-            cout << "        EH INSTRUCAO LOAD!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO LOAD!     OPCODE = " << *opcode << endl;
         }
         else if(palavras[1] == "STORE"){
             *opcode = 11;
-            cout << "        EH INSTRUCAO STORE!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO STORE!     OPCODE = " << *opcode << endl;
         }
         else if(palavras[1] == "INPUT"){
             *opcode = 12;
-            cout << "        EH INSTRUCAO INPUT!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO INPUT!     OPCODE = " << *opcode << endl;
         }
         else if(palavras[1] == "OUTPUT"){
             *opcode = 13;
-            cout << "        EH INSTRUCAO OUTPUT!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO OUTPUT!     OPCODE = " << *opcode << endl;
         }
         else if(palavras[1] == "STOP"){
             *opcode = 14;
-            cout << "        EH INSTRUCAO STOP!     OPCODE = " << *opcode << endl;
+            opcodes.emplace_back(*opcode);
+            //cout << "        EH INSTRUCAO STOP!     OPCODE = " << *opcode << endl;
         }
     }
 
