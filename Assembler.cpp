@@ -34,9 +34,16 @@ void Assembler::assemble() {
  * Funcao que le o arquivo com o codigo fonte *
  *********************************************/
 void Assembler::passagemZero() {
-    
-	int i, pc = 1, opcode;
-    string line, words[4];
+	string words[4];
+	vector<string> listatemp;
+	vector<string> listatempvalor;
+	vector<string> vetorpalavras;
+
+	string palavras,apoio,saida;
+	int flagsalvalinha= 1; 
+
+	int i,j, pc = 1, opcode;
+    string line;
     ofstream preProcessado;
     ifstream codigoFonte(this->filePath);           // Abre o arquivo com o codigo fonte
 
@@ -51,20 +58,81 @@ void Assembler::passagemZero() {
             //cout << line << endl;                     // Printa a linha lida
 
             this->padrao(line);                   // Chama a funcao para retirar comentarios
-            cout << pc << " " << line << endl;       // Printa o contador de programa e a linha lida sem comentarios e em maiusculo
-            pc++;                                    // Incrementa o contador de progama
+            //cout << pc << " " << line << endl;       // Printa o contador de programa e a linha lida sem comentarios e em maiusculo
+            //pc++;                                    // Incrementa o contador de progama
 
-            this->separaPalavras(line, words, &opcode);             // Chama a funcao que separa cada palavras
+            //this->separaPalavras(line, words, &opcode);             // Chama a funcao que separa cada palavras
+			
+			istringstream iss(line);//coloca cada palavra em um vetor.
+			while (iss >> palavras)
+			{
+				vetorpalavras.push_back(palavras);
+			}
+			
+			for (i = 0; i < vetorpalavras.size();i++) //cria lista temporaria de EQU
+			{
+				if (vetorpalavras.at(i) == "EQU") 
+				{
+					apoio = vetorpalavras.at(i - 1);
+					
+					apoio = apoio.substr(0,apoio.find(":"));
+					listatemp.push_back(apoio);
+					listatempvalor.push_back(vetorpalavras.at(i + 1));
+					
+				}
+			
+			}
+			
+			for (i = 0; i < vetorpalavras.size(); i++) // Procura valor label de EQU e substitui
+			{
+				for (j = 0;j < listatemp.size();j++) 
+				{
 
+					if(vetorpalavras.at(i) == listatemp.at(j)) 
+					{
+						vetorpalavras.at(i) = listatempvalor.at(j);
+					}
+				}
+
+			}
+			apoio.clear();//Recria linha com valores substituidos
+			for (i = 0; i < vetorpalavras.size();i++) {
+				apoio += vetorpalavras.at(i) + " ";
+			
+			}
+			//logica de salvar a linha correta
+			if (apoio.find("EQU") !=std::string::npos) {
+				flagsalvalinha = 0;
+			}
+			if (apoio.find("IF") != std::string::npos) {
+				flagsalvalinha = 0;
+				//cout << line << endl;
+				
+			}
+			if (apoio.find("IF 0") != std::string::npos) {
+				
+				flagsalvalinha = -1;
+			}
+			if (flagsalvalinha == 1) {
+				saida = apoio + "\n";
+				preProcessado << saida;
+			}
+			apoio.empty();
+			flagsalvalinha++;
+			if (flagsalvalinha > 1) {
+				flagsalvalinha = 1;
+			}
+			vetorpalavras.clear();
             //cout << "OPCODE = " << opcode << endl;    // Isso aqui printa nas linhas de deritivas sem opcode tbm
 
             // Verifica se o arquivo com o codigo pre-processado foi aberto
-            if(preProcessado.is_open()) {
+           /* if(preProcessado.is_open()) {
                 preProcessado << line << endl;       // Escreve a linha no arquivo de codigo pre-processado
             }
+			*/
             //this->writePreProcesasdo();
         }
-		
+		//preProcessado << saida;
         codigoFonte.close();     // Fecha o arquivo com o codigo fonte
         preProcessado.close();   // Fecha o arquivo com o codigo pre-processado
 
@@ -178,26 +246,27 @@ void Assembler::CriaTabeladeUso(string linha)
 /***********************************************
  * Funcao que separa as palavras de cada linha *
  **********************************************/
-void Assembler::separaPalavras(string linha, string *palavras, int* opcode){
+void Assembler::separaPalavras(string linha, string* palavras, int* opcode){
     int i = 0;
     string word;
 
     // Inicializa o vetor de palavras da linhas com NULL
-    palavras[0] = "NULL";
+	palavras[0] = "NULL";
     palavras[1] = "NULL";
     palavras[2] = "NULL";
     palavras[3] = "NULL";
 
     // Pega cada palavra separada por espaco
     istringstream iss(linha);
-    while (iss >> word)
-    {
+	while (iss >> word)
+	{
+
         //cout << " | "<< word << " | ";      // Printa cada palavra sepaarada
         palavras[i] = word;             // Coloca cada palavra no vetor de palavras
         i++;
     }
 
-    checaMneumonico(palavras, opcode);            // Chama a funcao que checa se eh uma diretiva ou instrucao
+    //checaMneumonico(palavras, opcode);            // Chama a funcao que checa se eh uma diretiva ou instrucao
 
     //cout << endl;                           // Printa uma quebra de
 /*
@@ -311,6 +380,9 @@ void Assembler::checaMneumonico(string* palavras, int* opcode) {
         }
         else if(palavras[1] == "EQU"){
             cout << "SEGUIDO DE DIRETIVA EQU  E VALOR: " << palavras[2] << endl;
+
+
+
         }
         else if(palavras[1] == "IF"){
             cout << "SEGUIDO DE DIRETIVA IF!" << endl;
