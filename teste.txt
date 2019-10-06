@@ -2,8 +2,10 @@ label: EQU 1
 label2: EQU 0
 SECTION TEXT
 INPUT OLD_DATA			; comentario 1
-LOAD OLD_DATA			; comentário 2
-L1: DIV DOIS			; comentario 3
+L2:
+LOAD OLD_DATA			; comentario 2
+L1:
+DIV DOIS			; comentario 3
 if label2
 STORE  new_data			; coloquei new_data minusculo
 mult DOIS			; coloquei mult minusculo

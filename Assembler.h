@@ -13,16 +13,21 @@ public:
 
 private:
     void passagemZero();                // Funcao para leitura do codigo fonte
-    void padrao(string& linha);     // Funcao para retirar comentarios e ignorar letras maiusculas/minusculas
-	void CriaListas();				// Funcao para criar listas de OPcode e Diretivas de maneira vector de strings
-	void CriaTabeladeUso(string);	// Funcao para criar lista de usos que l? de palavra em palavra comparando com a ListadeOPcode e Lista de Diretivas
-	void separaPalavras(string linha, string* palavras, int* opcode);          // Funcao que separa as palavras de cada linha
-	void checaMneumonico(string* palavras, int* opcode);
+    void padrao();         // Funcao para retirar comentarios e ignorar letras maiusculas/minusculas
+	void CriaListas();				    // Funcao para criar listas de OPcode e Diretivas de maneira vector de strings
+	void CriaTabeladeUso(string);	    // Funcao para criar lista de usos que l? de palavra em palavra comparando com a ListadeOPcode e Lista de Diretivas
+	void passagemUm();      // Funcao que separa inicia a primeira passagem de fato
+	void checaMneumonico();     // Funcao para tratamento de erros na linha
 
 	vector<string> ListadeOPcode;
 	vector<string> ListadeDiretivas;
+    vector<string> listatemp;
+    vector<string> listatempvalor;
+    vector<string> vetorpalavras;
 	vector<int> opcodes;
-    string filePath;                // Variavel para ser o caminho do arquivo de cada instancia do montador
+    string filePath, word[4], line, saida, apoio;
+    int text_field_start, data_field_start, pc_codigo_fonte, pc_pre_processado,
+        line_opcode, flagsalvalinha;
 };
 
 
