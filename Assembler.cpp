@@ -119,14 +119,31 @@ void Assembler::passagemZero() {
 
 			// Escreve no arquivo pre-processado se a linha nao tem IF/EQU ou se a linha anterior nao era IF 0
 			if (flagsalvalinha == 1) {
-				saida = apoio + "\n";
+				//saida = apoio + "\n";
+				if (vetorpalavras.size() > 1) {
+					//if (apoio.find(":") != std::string::npos) {
+					//cout << apoio;
+					saida = apoio + "\n";
+					//}
+
+				}
+				else {
+					if (apoio.find(":") != std::string::npos) {
+						saida = apoio;
+					}
+					else {
+						saida = apoio + "\n";
+					}
+				}
+				
+				
                 this->separaPalavras(saida, words, &opcode);             // Chama a funcao que separa cada palavras
                 if(preProcessado.is_open()) {
                     preProcessado << saida;        // Escreve a linha certa no arquivo pre-processado
                 }
 			}
 
-			apoio.empty(); // todo - isso aqui soh retorna se apoio esta vazio ou nao (true or false)
+			
 			flagsalvalinha++;
 
 			if (flagsalvalinha > 1) {
