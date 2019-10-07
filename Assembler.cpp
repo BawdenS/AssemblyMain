@@ -109,14 +109,14 @@ void Assembler::passagemZero() {
 
                 if (vetor_palavras.size() > 1) {
                     this->saida = this->apoio + "\n";
-                    this->pc_pre_processado++;
+                    //this->pc_pre_processado++;
                 }
                 else if (this->apoio.find(":") != std::string::npos) {
                     this->saida = this->apoio;
                 }
                 else {
                     this->saida = this->apoio + "\n";
-                    this->pc_pre_processado++;
+                    //this->pc_pre_processado++;
                 }
 
                 // Verifica se o arquivo com o codigo pre-processado foi aberto
@@ -236,12 +236,6 @@ void Assembler::criaTabeladeUso(string linha)
  **********************************************/
 void Assembler::passagemUm(string preProcessado){
     int i = 0, posicaotabela = 0;
-    /*
-    this->word[0] = "NULL";
-    this->word[1] = "NULL";
-    this->word[2] = "NULL";
-    this->word[3] = "NULL";
-    */
 
     ifstream codigoPreProcessado("Codigo Pre-processado.txt");     // Abre o arquivo que contem o codigo pre-processado
     ofstream codigoObjeto("Codigo Objeto.txt");     // Abre o arquivo texto que contera o codigo objeto
@@ -256,6 +250,7 @@ void Assembler::passagemUm(string preProcessado){
         }
 
         checaMneumonico(&posicaotabela);        // Chama a funcao que checa cada mneumonico
+        this->pc_pre_processado++;
 
     }
 
@@ -279,211 +274,26 @@ void Assembler::passagemUm(string preProcessado){
  * Funcao que checa se a palavra eh um mneumonico *
  ************************************************/
 void Assembler::checaMneumonico(int *posicaotabela) {
-    /*
-	if(word[0] == "SECTION"){
-        if(word[1] == "TEXT"){
-            //cout << "        EH DIRETIVA SECTION TEXT!" << endl;
-            this->text_field_start = this->pc_pre_processado;
-            cout << "Campo Text comeca na linha " << this->text_field_start << endl;
-        }
-        else if(word[1] == "DATA"){
-            //cout << "        EH DIRETIVA SECTION DATA!" << endl;
-            this->data_field_start = this->pc_pre_processado;
-            cout << "Campo Data comeca na linha " << this->data_field_start << endl;
-        }
-    }
-    else if(word[0] == "SPACE"){
-        this->line_opcode = 00;
-        opcodes.emplace_back(this->line_opcode);
-
-        if(word[1] != "NULL"){
-            //cout << "        EH DIRETIVA SPACE E VALOR: " << word[1] << " OPCODE = " << this->line_opcode << this->line_opcode << endl;
-        }
-        else{
-            //cout << "        EH DIRETIVA SPACE E VALOR: 1 OPCODE = " << this->line_opcode << this->line_opcode << endl;
-        }
-    }
-    else if(word[0] == "CONST"){
-        //cout << "        EH DIRETIVA CONST  E VALOR: " << word[1] << endl;
-    }
-    else if(word[0] == "EQU"){
-        //cout << "        EH DIRETIVA EQU  E VALOR: " << word[1] << endl;
-    }
-    else if(word[0] == "IF"){
-        //cout << "        EH DIRETIVA IF!" << endl;
-    }
-    else if(word[0] == "ADD"){
-        this->line_opcode = 1;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO ADD!     OPCODE = " << this->line_opcode << endl;
-    }
-    else if(word[0] == "SUB"){
-        this->line_opcode = 2;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO SUB!     OPCODE = " << this->line_opcode << endl;
-    }
-    else if(word[0] == "MULT"){
-        this->line_opcode = 3;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO MULT!     OPCODE = " << this->line_opcode << endl;
-    }
-    else if(word[0] == "DIV"){
-        this->line_opcode = 4;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO DIV!     OPCODE = " << this->line_opcode << endl;
-    }
-    else if(word[0] == "JMP"){
-        this->line_opcode = 5;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO JMP!     OPCODE = " << this->line_opcode << endl;
-    }
-    else if(word[0] == "JMPN"){
-        this->line_opcode = 6;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO JMPN!     OPCODE = " << this->line_opcode << endl;
-    }
-    else if(word[0] == "JMPP"){
-        this->line_opcode = 7;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO JMPP!     OPCODE = " << this->line_opcode << endl;
-    }
-    else if(word[0] == "JMPZ"){
-        this->line_opcode = 8;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO JMPZ!     OPCODE = " << this->line_opcode << endl;
-    }
-    else if(word[0] == "COPY"){
-        this->line_opcode = 9;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO COPY!     OPCODE = " << this->line_opcode << endl;
-    }
-    else if(word[0] == "LOAD"){
-        this->line_opcode = 10;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO LOAD!     OPCODE = " << this->line_opcode << endl;
-    }
-    else if(word[0] == "STORE"){
-        this->line_opcode = 11;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO STORE!     OPCODE = " << this->line_opcode << endl;
-    }
-    else if(word[0] == "INPUT"){
-        this->line_opcode = 12;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO INPUT!     OPCODE = " << this->line_opcode << endl;
-    }
-    else if(word[0] == "OUTPUT"){
-        this->line_opcode = 13;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO OUTPUT!     OPCODE = " << this->line_opcode << endl;
-    }
-    else if(word[0] == "STOP"){
-        this->line_opcode = 14;
-        opcodes.emplace_back(this->line_opcode);
-        //cout << "        EH INSTRUCAO STOP!     OPCODE = " << this->line_opcode << endl;
-    }
-    else{
-        //cout << "        NAO EH MNEUMONICO, EH SIMBOLO! ";
-        if(word[1] == "SPACE"){
-            this->line_opcode = 00;
-            opcodes.emplace_back(this->line_opcode);
-            if(word[2] != "NULL"){
-                //cout << "        EH DIRETIVA SPACE E VALOR: " << word[1] << " OPCODE = " << this->line_opcode << this->line_opcode << endl;
-            }
-            else{
-                //cout << "        EH DIRETIVA SPACE E VALOR: 1 OPCODE = " << this->line_opcode << this->line_opcode << endl;
-            }
-        }
-        else if(word[1] == "CONST"){
-            //cout << "SEGUIDO DE DIRETIVA CONST E VALOR: " << word[2] << endl;
-        }
-        else if(word[1] == "EQU"){
-            //cout << "SEGUIDO DE DIRETIVA EQU  E VALOR: " << word[2] << endl;
-        }
-        else if(word[1] == "IF"){
-            //cout << "SEGUIDO DE DIRETIVA IF!" << endl;
-        }
-        else if(word[1] == "ADD"){
-            this->line_opcode = 1;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO ADD!     OPCODE = " << this->line_opcode << endl;
-        }
-        else if(word[1] == "SUB"){
-            this->line_opcode = 2;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO SUB!     OPCODE = " << this->line_opcode << endl;
-        }
-        else if(word[1] == "MULT"){
-            this->line_opcode = 3;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO MULT!     OPCODE = " << this->line_opcode << endl;
-        }
-        else if(word[1] == "DIV"){
-            this->line_opcode = 4;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO DIV!     OPCODE = " << this->line_opcode << endl;
-        }
-        else if(word[1] == "JMP"){
-            this->line_opcode = 5;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO JMP!     OPCODE = " << this->line_opcode << endl;
-        }
-        else if(word[1] == "JMPN"){
-            this->line_opcode = 6;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO JMPN!     OPCODE = " << this->line_opcode << endl;
-        }
-        else if(word[1] == "JMPP"){
-            this->line_opcode = 7;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO JMPP!     OPCODE = " << this->line_opcode << endl;
-        }
-        else if(word[1] == "JMPZ"){
-            this->line_opcode = 8;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO JMPZ!     OPCODE = " << this->line_opcode << endl;
-        }
-        else if(word[1] == "COPY"){
-            this->line_opcode = 9;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO COPY!     OPCODE = " << this->line_opcode << endl;
-        }
-        else if(word[1] == "LOAD"){
-            this->line_opcode = 10;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO LOAD!     OPCODE = " << this->line_opcode << endl;
-        }
-        else if(word[1] == "STORE"){
-            this->line_opcode = 11;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO STORE!     OPCODE = " << this->line_opcode << endl;
-        }
-        else if(word[1] == "INPUT"){
-            this->line_opcode = 12;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO INPUT!     OPCODE = " << this->line_opcode << endl;
-        }
-        else if(word[1] == "OUTPUT"){
-            this->line_opcode = 13;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO OUTPUT!     OPCODE = " << this->line_opcode << endl;
-        }
-        else if(word[1] == "STOP"){
-            this->line_opcode = 14;
-            opcodes.emplace_back(this->line_opcode);
-            //cout << "        EH INSTRUCAO STOP!     OPCODE = " << this->line_opcode << endl;
-        }
-    }
-	*/
-
     int i,j;
+    
     for (i = 0; i < this->vetor_palavras.size(); i++) {
+        // Reconhecimento dos campos TEXT e DATA
+        if (this->vetor_palavras.at(i) == "SECTION") {
+            if(this->vetor_palavras.at(i+1) == "TEXT"){
+                this->text_field_start = this->pc_pre_processado;
+                cout << "Campo Text comeca na linha " << this->text_field_start << endl;
+            }
+            else if(this->vetor_palavras.at(i+1) == "DATA"){
+                this->data_field_start = this->pc_pre_processado;
+                cout << "Campo Data comeca na linha " << this->data_field_start << endl;
+            }
+
+            i++; // pula palavra posterior (no caso TEXT ou DATA)
+
+        }
         //if gerais
-
-        if (this->vetor_palavras.at(i) == "CONST") {
-
+        else if (this->vetor_palavras.at(i) == "CONST") {
             this->opcodes.push_back(this->vetor_palavras.at(i + 1));
-
             i++; // pula palavra posterior
         }
         else if (this->vetor_palavras.at(i) == "SPACE") {
@@ -496,6 +306,49 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Caso de declaracao de uma variavel
             else
                 this->opcodes.push_back("00");
+        }
+        // todo - colocar os enderecos dos operandos dando push_back em opcodes tambem
+        else if (this->vetor_palavras.at(i) == "ADD") {
+            this->opcodes.push_back("1");
+        }
+        else if (this->vetor_palavras.at(i) == "SUB") {
+            this->opcodes.push_back("2");
+        }
+        else if (this->vetor_palavras.at(i) == "MULT") {
+            this->opcodes.push_back("3");
+        }
+        else if (this->vetor_palavras.at(i) == "DIV") {
+            this->opcodes.push_back("4");
+        }
+        else if (this->vetor_palavras.at(i) == "JMP") {
+            this->opcodes.push_back("5");
+        }
+        else if (this->vetor_palavras.at(i) == "JMPN") {
+            this->opcodes.push_back("6");
+        }
+        else if (this->vetor_palavras.at(i) == "JMPP") {
+            this->opcodes.push_back("7");
+        }
+        else if (this->vetor_palavras.at(i) == "JMPZ") {
+            this->opcodes.push_back("8");
+        }
+        else if (this->vetor_palavras.at(i) == "COPY") {
+            this->opcodes.push_back("9");
+        }
+        else if (this->vetor_palavras.at(i) == "LOAD") {
+            this->opcodes.push_back("10");
+        }
+        else if (this->vetor_palavras.at(i) == "STORE") {
+            this->opcodes.push_back("11");
+        }
+        else if (this->vetor_palavras.at(i) == "INPUT") {
+            this->opcodes.push_back("12");
+        }
+        else if (this->vetor_palavras.at(i) == "OUTPUT") {
+            this->opcodes.push_back("13");
+        }
+        else if (this->vetor_palavras.at(i) == "STOP") {
+            this->opcodes.push_back("14");
         }
         // if nao gerais
         // label definida
