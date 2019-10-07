@@ -263,6 +263,11 @@ void Assembler::passagemUm(string preProcessado){
         saida += opcodes.at(i) + " ";
     }
 
+    // Erro de secao TEXT faltante
+    if(!section_text_present){
+        // todo - ter certeza de qual o tipo desse erro
+        cout << "Erro semantico???: Secao TEXT faltante" << endl;
+    }
     cout << saida;
     codigoObjeto << saida;
     codigoObjeto.close();          // Fecha o arquivo com o codigo fonte
@@ -275,20 +280,25 @@ void Assembler::passagemUm(string preProcessado){
  ************************************************/
 void Assembler::checaMneumonico(int *posicaotabela) {
     int i,j;
-    
+
     for (i = 0; i < this->vetor_palavras.size(); i++) {
         // Reconhecimento dos campos TEXT e DATA
         if (this->vetor_palavras.at(i) == "SECTION") {
+            // todo - tratar o erro de ter apenas SECTION, ou seja, nao existir a posicao i+1 nessa linha
             if(this->vetor_palavras.at(i+1) == "TEXT"){
                 this->text_field_start = this->pc_pre_processado;
+                section_text_present = true;
                 cout << "Campo Text comeca na linha " << this->text_field_start << endl;
             }
             else if(this->vetor_palavras.at(i+1) == "DATA"){
                 this->data_field_start = this->pc_pre_processado;
                 cout << "Campo Data comeca na linha " << this->data_field_start << endl;
             }
+            else
+                // todo - ter certeza de qual o tipo desse erro
+                cout <<  "Linha " << pc_pre_processado << "; Erro semantico???: Campo invalido" << endl;
 
-            i++; // pula palavra posterior (no caso TEXT ou DATA)
+            i++;    // pula palavra posterior (no caso TEXT ou DATA)
 
         }
         //if gerais
@@ -307,48 +317,61 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             else
                 this->opcodes.push_back("00");
         }
-        // todo - colocar os enderecos dos operandos dando push_back em opcodes tambem
         else if (this->vetor_palavras.at(i) == "ADD") {
-            this->opcodes.push_back("1");
+            this->opcodes.push_back("1");           // Coloca o opcode da instrucao no vetor
+            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "SUB") {
-            this->opcodes.push_back("2");
+            this->opcodes.push_back("1");           // Coloca o opcode da instrucao no vetor
+            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "MULT") {
-            this->opcodes.push_back("3");
+            this->opcodes.push_back("3");           // Coloca o opcode da instrucao no vetor
+            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "DIV") {
-            this->opcodes.push_back("4");
+            this->opcodes.push_back("4");           // Coloca o opcode da instrucao no vetor
+            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "JMP") {
-            this->opcodes.push_back("5");
+            this->opcodes.push_back("5");           // Coloca o opcode da instrucao no vetor
+            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "JMPN") {
-            this->opcodes.push_back("6");
+            this->opcodes.push_back("6");           // Coloca o opcode da instrucao no vetor
+            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "JMPP") {
-            this->opcodes.push_back("7");
+            this->opcodes.push_back("7");           // Coloca o opcode da instrucao no vetor
+            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "JMPZ") {
-            this->opcodes.push_back("8");
+            this->opcodes.push_back("8");           // Coloca o opcode da instrucao no vetor
+            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "COPY") {
-            this->opcodes.push_back("9");
+            this->opcodes.push_back("9");           // Coloca o opcode da instrucao no vetor
+            // todo - talevez tenha que mudar esse 2
+//            trataErros(&i, 2);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "LOAD") {
-            this->opcodes.push_back("10");
+            this->opcodes.push_back("10");          // Coloca o opcode da instrucao no vetor
+            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "STORE") {
-            this->opcodes.push_back("11");
+            this->opcodes.push_back("11");          // Coloca o opcode da instrucao no vetor
+            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "INPUT") {
-            this->opcodes.push_back("12");
+            this->opcodes.push_back("12");          // Coloca o opcode da instrucao no vetor
+            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "OUTPUT") {
-            this->opcodes.push_back("13");
+            this->opcodes.push_back("13");          // Coloca o opcode da instrucao no vetor
+            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "STOP") {
-            this->opcodes.push_back("14");
+            this->opcodes.push_back("14");          // Coloca o opcode da instrucao no vetor
         }
         // if nao gerais
         // label definida
@@ -358,12 +381,45 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             tabela_de_simbolos->procuraPendencias(this->apoio, *posicaotabela);
             posicaotabela--;
         }
-            //todo douradao
-            //label nao definida
+        //todo douradao
+        //label nao definida
         else {
 
 
         }
         posicaotabela++;
     }
+}
+
+
+/*************************************************************
+ * Funcao trata dos erros presentes do codigo pre-processado *
+ ************************************************************/
+void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
+
+    // Erros na quantidade de operandos
+    if(n_operandos == 1)
+    {
+        if(this->vetor_palavras.size() - *posicao_da_palavra != 2){
+            cout << "Linha " << pc_pre_processado << "; Erro sintatico: Quantidade de operandos invalida para a operacao" << endl;
+        }
+        else{
+            // todo - dar push_back nos enderecos dos operandos, nao na string dos operandos
+            this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+1));
+            *posicao_da_palavra++;    // pula palavra posterior
+        }
+    }
+    // todo - pensar melhor isso aqui, pois COPY é com ',' nao ' '
+    else if(n_operandos == 2){
+        if(this->vetor_palavras.size() <= *posicao_da_palavra+2){
+            cout << "Linha " << pc_pre_processado << "; Erro sintatico: Quantidade de operandos invalida para a operacao" << endl;
+        }
+        else{
+            this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+1));
+            this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+2));
+            *posicao_da_palavra++;    // pula palavra posterior
+            *posicao_da_palavra++;    // pula palavra posterior
+        }
+    }
+
 }
