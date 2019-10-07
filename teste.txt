@@ -1,9 +1,8 @@
-label: EQU 1
+﻿label: EQU 1
 label2: EQU 0
 SECTION TEXT
 INPUT OLD_DATA			; comentario 1
-L2:
-LOAD OLD_DATA			; comentario 2
+LOAD OLD_DATA			; comentário 2
 L1:
 DIV DOIS			; comentario 3
 if label2
@@ -20,6 +19,6 @@ JMPP L1
 STOP
 SECTION DATA
 DOIS: CONST 2
-OLD_DATA: SPACE
+OLD_DATA: SPACE 4
 NEW_DATA: SPACE
 TMP_DATA: SPACE

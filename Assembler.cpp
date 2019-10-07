@@ -15,6 +15,7 @@ Assembler::Assembler(string filePath) {
     this->pc_codigo_fonte = 1;
     this->pc_pre_processado = 1;
     this->flagsalvalinha = 1;
+	this->tabeladesimbolo = new TabelaDeSimbolo();
 }
 
 
@@ -40,7 +41,7 @@ void Assembler::passagemZero() {
     int i, j;
 
     ofstream preProcessado;
-    ofstream codigoObjeto;
+    //ofstream codigoObjeto;
     ifstream codigoFonte(this->filePath);           // Abre o arquivo com o codigo fonte
 
     this->CriaListas();//cria lista de OPcodes e Diretivas
@@ -48,7 +49,7 @@ void Assembler::passagemZero() {
     // Verifica se o arquivo com o codigo fonte foi, de fato, aberto
     if(codigoFonte.is_open()){
         preProcessado.open("Codigo Pre-processado.txt");    // Cria o arquivo texto que contera o codigo pre-processado
-        codigoObjeto.open("Codigo Objeto.txt");    // Cria o arquivo texto que contera o codigo objeto
+        //codigoObjeto.open("Codigo Objeto.txt");    // Cria o arquivo texto que contera o codigo objeto
 
         while(!codigoFonte.eof()){
             getline(codigoFonte, this->line);        // Le cada linha do codigo fonte
@@ -108,22 +109,6 @@ void Assembler::passagemZero() {
 
             // Escreve no arquivo pre-processado se a linha nao tem IF/EQU ou se a linha anterior nao era IF 0
             if (this->flagsalvalinha == 1) {
-                //saida = apoio + "\n";
-//                if (vetorpalavras.size() > 1) {
-//                    //if (apoio.find(":") != std::string::npos) {
-//                    //cout << apoio;
-//                    saida = apoio + "\n";
-//                    //}
-//
-//                }
-//                else {
-//                    if (apoio.find(":") != std::string::npos) {
-//                        saida = apoio;
-//                    }
-//                    else {
-//                        saida = apoio + "\n";
-//                    }
-//                }
 
                 // todo - Se liga na diferenca, eh a mesma coisa, soh q com menos enter e {}
                 if (vetorpalavras.size() > 1) {
@@ -138,8 +123,7 @@ void Assembler::passagemZero() {
                     this->pc_pre_processado++;
                 }
 
-                // Chama a funcao da primeira passagem de fato
-                this->passagemUm();
+                
 
                 // Verifica se o arquivo com o codigo pre-processado foi aberto
                 if(preProcessado.is_open()) {
@@ -157,15 +141,13 @@ void Assembler::passagemZero() {
 
         }
 
-        // Coloca os opcodes no codigo objeto
-        for(i = 0; i < opcodes.size(); i++){
-            codigoObjeto << opcodes.at(i) << " ";
-        }
+
 
         codigoFonte.close();     // Fecha o arquivo com o codigo fonte
         preProcessado.close();   // Fecha o arquivo com o codigo pre-processado
-        codigoObjeto.close();    // Fecha o arquivo com o codigo objeto
-
+        //codigoObjeto.close();    // Fecha o arquivo com o codigo objeto
+		// Chama a funcao da primeira passagem de fato
+		this->passagemUm("Codigo Pre-Processado.txt");
     }
     else
         cout << "Unable to open file" << endl;
@@ -263,23 +245,42 @@ void Assembler::CriaTabeladeUso(string linha)
 /***********************************************
  * Funcao que separa as palavras de cada linha *
  **********************************************/
-void Assembler::passagemUm(){
-    int i = 0;
-
+void Assembler::passagemUm(string PreProcessado){
+    int i = 0, posicaotabela = 0;
+	/*
     this->word[0] = "NULL";
     this->word[1] = "NULL";
     this->word[2] = "NULL";
     this->word[3] = "NULL";
-
+	*/
     // Pega cada palavra separada por espaco
-    istringstream iss(this->saida);
-    while (iss >> this->line)
-    {
-        word[i] = this->line;             // Coloca cada palavra no vetor de palavras
-        i++;
-    }
+	ofstream codigoObjeto("Codigo Objeto.txt");
+	ifstream codigoPreprocessado("Codigo Pre-processado.txt");
+	while (getline(codigoPreprocessado, this->line)) {
+		this->vetorpalavras.clear();
+		istringstream iss(this->line);
+		while (iss >> this->apoio)
+		{
+			this->vetorpalavras.push_back(this->apoio);             // Coloca cada palavra no vetor de palavras
+		}
+		checaMneumonico(&posicaotabela);
 
-    checaMneumonico();            // Chama a funcao que checa se eh uma diretiva ou instrucao
+		
+
+
+	}
+	this->saida.clear();
+	// Coloca os opcodes no codigo objeto
+	for (i = 0; i < opcodes.size(); i++) {
+		
+		saida += opcodes.at(i) + " ";
+	}
+	cout << saida;
+	codigoObjeto << saida;
+	 // Chama a funcao que checa se eh uma diretiva ou instrucao
+
+	codigoObjeto.close();     // Fecha o arquivo com o codigo fonte
+	codigoPreprocessado.close();   // Fecha o arquivo com o codigo pre-processado
 
 }
 
@@ -287,8 +288,9 @@ void Assembler::passagemUm(){
 /*************************************************
  * Funcao que checa se a palavra eh um mneumonico *
  ************************************************/
-void Assembler::checaMneumonico() {
-    if(word[0] == "SECTION"){
+void Assembler::checaMneumonico(int *posicaotabela) {
+    /*
+	if(word[0] == "SECTION"){
         if(word[1] == "TEXT"){
             //cout << "        EH DIRETIVA SECTION TEXT!" << endl;
             this->text_field_start = this->pc_pre_processado;
@@ -482,5 +484,54 @@ void Assembler::checaMneumonico() {
             //cout << "        EH INSTRUCAO STOP!     OPCODE = " << this->line_opcode << endl;
         }
     }
+	*/
+//recebe vector<string>
+// 
+
+int i,j;
+for (i = 0; i < this->vetorpalavras.size(); i++) {
+	//if gerais
+	
+	if (this->vetorpalavras.at(i) == "CONST") {
+		
+		this->opcodes.push_back(this->vetorpalavras.at(i + 1));
+		
+		i++; // pula palavra posterior
+	}
+
+
+	else if (this->vetorpalavras.at(i) == "SPACE") {
+		//todo tratar vetor depois
+		if (this->vetorpalavras.size()-1 > i) {
+			for (j = 0; j < stoi(this->vetorpalavras.at(i + 1)); j++) {
+				this->opcodes.push_back("00");
+			}
+		}
+		else 
+			this->opcodes.push_back("00");
+	}
+
+
+	// if nao gerais
+	
+	//label definida
+	else if (this->vetorpalavras.at(i).find(":") != std::string::npos) 
+	{
+		this->apoio = this->vetorpalavras.at(i).substr(0, this->vetorpalavras.at(i).find(":"));
+		tabeladesimbolo->ProcuraPendencias(this->apoio, *posicaotabela);
+		posicaotabela--;
+	}
+	//todo douradao
+	//label nao definida
+	else {
+		
+
+	}
+	posicaotabela++;
+}
+
+
+
+
 
 }
