@@ -7,6 +7,8 @@
 #   Fernando Sobral Nobrega                         15/0034911      #
 #   Matheus Bawden Silverio Castro                  15/0141017      #
 #                                                                   #
+#            Compilador e Sistema Operacional usados                #
+#           g++ (Ubuntu 7.4.0-1ubuntu1~18.04.1) 7.4.0               #
 #                                                                   #
 ###################################################################*/
 

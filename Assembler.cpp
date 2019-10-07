@@ -1,21 +1,16 @@
 #include "Assembler.h"
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <sstream>
 
 using namespace std;
 
 /**************
  * Construtor *
  *************/
-Assembler::Assembler(string filePath) {
-    this->filePath = filePath;          // filePath da instancia recebe o filePath informado ao instanciar o objeto
+Assembler::Assembler(string caminho_do_arquivo) {
+    this->file_path = caminho_do_arquivo;          // file_path da instancia recebe o file_path informado ao instanciar o objeto
     this->pc_codigo_fonte = 1;
     this->pc_pre_processado = 1;
-    this->flagsalvalinha = 1;
-	this->tabeladesimbolo = new TabelaDeSimbolo();
+    this->flag_salva_linha = 1;
+    this->tabela_de_simbolos = new TabelaDeSimbolos();
 }
 
 
@@ -30,7 +25,11 @@ Assembler::~Assembler() {
  * Funcao que monta o codigo fonte *
  **********************************/
 void Assembler::assemble() {
-    this->passagemZero();           // Chama a funcao de leitura do codigo
+    // Chama a funcao da passagem zero
+    this->passagemZero();
+
+    // Chama a funcao da primeira passagem de fato
+    this->passagemUm("Codigo Pre-Processado.txt");
 }
 
 
@@ -41,15 +40,13 @@ void Assembler::passagemZero() {
     int i, j;
 
     ofstream preProcessado;
-    //ofstream codigoObjeto;
-    ifstream codigoFonte(this->filePath);           // Abre o arquivo com o codigo fonte
+    ifstream codigoFonte(this->file_path);           // Abre o arquivo com o codigo fonte
 
-    this->CriaListas();//cria lista de OPcodes e Diretivas
+    this->criaListas();//cria lista de OPcodes e Diretivas
 
     // Verifica se o arquivo com o codigo fonte foi, de fato, aberto
     if(codigoFonte.is_open()){
         preProcessado.open("Codigo Pre-processado.txt");    // Cria o arquivo texto que contera o codigo pre-processado
-        //codigoObjeto.open("Codigo Objeto.txt");    // Cria o arquivo texto que contera o codigo objeto
 
         while(!codigoFonte.eof()){
             getline(codigoFonte, this->line);        // Le cada linha do codigo fonte
@@ -61,29 +58,29 @@ void Assembler::passagemZero() {
             istringstream iss(this->line);
             while (iss >> this->line)
             {
-                vetorpalavras.push_back(this->line);
+                vetor_palavras.push_back(this->line);
             }
 
             // Cria lista temporaria de rotulos com EQU
-            for (i = 0; i < vetorpalavras.size();i++)
+            for (i = 0; i < vetor_palavras.size(); i++)
             {
-                if (vetorpalavras.at(i) == "EQU")
+                if (vetor_palavras.at(i) == "EQU")
                 {
-                    this->apoio = vetorpalavras.at(i - 1);
+                    this->apoio = vetor_palavras.at(i - 1);
                     this->apoio = this->apoio.substr(0,this->apoio.find(":"));
-                    listatemp.push_back(this->apoio);
-                    listatempvalor.push_back(vetorpalavras.at(i + 1));
+                    lista_temp.push_back(this->apoio);
+                    lista_temp_valor.push_back(vetor_palavras.at(i + 1));
                 }
             }
 
             // Procura valor label de EQU e substitui
-            for (i = 0; i < vetorpalavras.size(); i++)
+            for (i = 0; i < vetor_palavras.size(); i++)
             {
-                for (j = 0;j < listatemp.size();j++)
+                for (j = 0; j < lista_temp.size(); j++)
                 {
-                    if(vetorpalavras.at(i) == listatemp.at(j))
+                    if(vetor_palavras.at(i) == lista_temp.at(j))
                     {
-                        vetorpalavras.at(i) = listatempvalor.at(j);
+                        vetor_palavras.at(i) = lista_temp_valor.at(j);
                     }
                 }
             }
@@ -92,26 +89,25 @@ void Assembler::passagemZero() {
             this->apoio.clear();
 
             //  Recria linha com valores substituidos
-            for (i = 0; i < vetorpalavras.size();i++) {
-                this->apoio += vetorpalavras.at(i) + " ";
+            for (i = 0; i < vetor_palavras.size(); i++) {
+                this->apoio += vetor_palavras.at(i) + " ";
             }
 
             // Logica para salvar a linha correta no arquivo com o codigo pre-processado
             if (this->apoio.find("EQU") !=std::string::npos) {
-                this->flagsalvalinha = 0;
+                this->flag_salva_linha = 0;
             }
             if (this->apoio.find("IF") != std::string::npos) {
-                this->flagsalvalinha = 0;
+                this->flag_salva_linha = 0;
             }
             if (this->apoio.find("IF 0") != std::string::npos) {
-                this->flagsalvalinha = -1;
+                this->flag_salva_linha = -1;
             }
 
             // Escreve no arquivo pre-processado se a linha nao tem IF/EQU ou se a linha anterior nao era IF 0
-            if (this->flagsalvalinha == 1) {
+            if (this->flag_salva_linha == 1) {
 
-                // todo - Se liga na diferenca, eh a mesma coisa, soh q com menos enter e {}
-                if (vetorpalavras.size() > 1) {
+                if (vetor_palavras.size() > 1) {
                     this->saida = this->apoio + "\n";
                     this->pc_pre_processado++;
                 }
@@ -123,31 +119,24 @@ void Assembler::passagemZero() {
                     this->pc_pre_processado++;
                 }
 
-                
-
                 // Verifica se o arquivo com o codigo pre-processado foi aberto
                 if(preProcessado.is_open()) {
                     preProcessado << this->saida;        // Escreve a linha certa no arquivo pre-processado
                 }
             }
 
-            this->flagsalvalinha++;
+            this->flag_salva_linha++;
 
-            if (this->flagsalvalinha > 1) {
-                this->flagsalvalinha = 1;
+            if (this->flag_salva_linha > 1) {
+                this->flag_salva_linha = 1;
             }
 
-            vetorpalavras.clear();
+            vetor_palavras.clear();
 
         }
 
-
-
         codigoFonte.close();     // Fecha o arquivo com o codigo fonte
         preProcessado.close();   // Fecha o arquivo com o codigo pre-processado
-        //codigoObjeto.close();    // Fecha o arquivo com o codigo objeto
-		// Chama a funcao da primeira passagem de fato
-		this->passagemUm("Codigo Pre-Processado.txt");
     }
     else
         cout << "Unable to open file" << endl;
@@ -171,43 +160,43 @@ void Assembler::padrao() {
 /*******************************************************************
  * Funcao que cria e escreve as Listas de OPcode e de Diretivas *
  ******************************************************************/
-void Assembler::CriaListas() {
-    this->ListadeDiretivas.push_back("SECTION");
-    this->ListadeDiretivas.push_back("TEXT");
-    this->ListadeDiretivas.push_back("DATA");
-    this->ListadeDiretivas.push_back("SPACE");
-    this->ListadeDiretivas.push_back("EQU");
-    this->ListadeDiretivas.push_back("IF");
-    this->ListadeOPcode.push_back("ADD");
-    this->ListadeOPcode.push_back("SUB");
-    this->ListadeOPcode.push_back("MULT");
-    this->ListadeOPcode.push_back("DIV");
-    this->ListadeOPcode.push_back("JMP");
-    this->ListadeOPcode.push_back("JMPN");
-    this->ListadeOPcode.push_back("JMPP");
-    this->ListadeOPcode.push_back("JMPZ");
-    this->ListadeOPcode.push_back("COPY");
-    this->ListadeOPcode.push_back("LOAD");
-    this->ListadeOPcode.push_back("STORE");
-    this->ListadeOPcode.push_back("INPUT");
-    this->ListadeOPcode.push_back("OUTPUT");
-    this->ListadeOPcode.push_back("STOP");
+void Assembler::criaListas() {
+    this->lista_de_diretivas.push_back("SECTION");
+    this->lista_de_diretivas.push_back("TEXT");
+    this->lista_de_diretivas.push_back("DATA");
+    this->lista_de_diretivas.push_back("SPACE");
+    this->lista_de_diretivas.push_back("EQU");
+    this->lista_de_diretivas.push_back("IF");
+    this->lista_de_opcode.push_back("ADD");
+    this->lista_de_opcode.push_back("SUB");
+    this->lista_de_opcode.push_back("MULT");
+    this->lista_de_opcode.push_back("DIV");
+    this->lista_de_opcode.push_back("JMP");
+    this->lista_de_opcode.push_back("JMPN");
+    this->lista_de_opcode.push_back("JMPP");
+    this->lista_de_opcode.push_back("JMPZ");
+    this->lista_de_opcode.push_back("COPY");
+    this->lista_de_opcode.push_back("LOAD");
+    this->lista_de_opcode.push_back("STORE");
+    this->lista_de_opcode.push_back("INPUT");
+    this->lista_de_opcode.push_back("OUTPUT");
+    this->lista_de_opcode.push_back("STOP");
 }
 
 
 /***********************************
  * Funcao que cria a tabela de uso *
  **********************************/
-void Assembler::CriaTabeladeUso(string linha)
+void Assembler::criaTabeladeUso(string linha)
 {
     int i;
     string word;
     istringstream iss(linha);
     while (iss >> word)
     {
-        for (i = 0; i < this->ListadeOPcode.size();i++)
+        for (i = 0; i < this->lista_de_opcode.size(); i++)
         {
-            if (word == this->ListadeOPcode.at(i)) {
+            if (word == this->lista_de_opcode.at(i)) {
                 i = 20;
                 break;
             }
@@ -218,9 +207,9 @@ void Assembler::CriaTabeladeUso(string linha)
             break;
         }
 
-        for (i = 0; i < this->ListadeDiretivas.size(); i++)
+        for (i = 0; i < this->lista_de_diretivas.size(); i++)
         {
-            if (word == this->ListadeDiretivas.at(i)) {
+            if (word == this->lista_de_diretivas.at(i)) {
                 i = 20;
                 break;
             }
@@ -245,42 +234,43 @@ void Assembler::CriaTabeladeUso(string linha)
 /***********************************************
  * Funcao que separa as palavras de cada linha *
  **********************************************/
-void Assembler::passagemUm(string PreProcessado){
+void Assembler::passagemUm(string preProcessado){
     int i = 0, posicaotabela = 0;
-	/*
+    /*
     this->word[0] = "NULL";
     this->word[1] = "NULL";
     this->word[2] = "NULL";
     this->word[3] = "NULL";
-	*/
+    */
+
+    ifstream codigoPreProcessado("Codigo Pre-processado.txt");     // Abre o arquivo que contem o codigo pre-processado
+    ofstream codigoObjeto("Codigo Objeto.txt");     // Abre o arquivo texto que contera o codigo objeto
+
     // Pega cada palavra separada por espaco
-	ofstream codigoObjeto("Codigo Objeto.txt");
-	ifstream codigoPreprocessado("Codigo Pre-processado.txt");
-	while (getline(codigoPreprocessado, this->line)) {
-		this->vetorpalavras.clear();
-		istringstream iss(this->line);
-		while (iss >> this->apoio)
-		{
-			this->vetorpalavras.push_back(this->apoio);             // Coloca cada palavra no vetor de palavras
-		}
-		checaMneumonico(&posicaotabela);
+    while (getline(codigoPreProcessado, this->line)) {
+        this->vetor_palavras.clear();
+        istringstream iss(this->line);
+        while (iss >> this->apoio)
+        {
+            this->vetor_palavras.push_back(this->apoio);             // Coloca cada palavra no vetor de palavras
+        }
 
-		
+        checaMneumonico(&posicaotabela);        // Chama a funcao que checa cada mneumonico
 
+    }
 
-	}
-	this->saida.clear();
-	// Coloca os opcodes no codigo objeto
-	for (i = 0; i < opcodes.size(); i++) {
-		
-		saida += opcodes.at(i) + " ";
-	}
-	cout << saida;
-	codigoObjeto << saida;
-	 // Chama a funcao que checa se eh uma diretiva ou instrucao
+    codigoPreProcessado.close();   // Fecha o arquivo com o codigo pre-processado
 
-	codigoObjeto.close();     // Fecha o arquivo com o codigo fonte
-	codigoPreprocessado.close();   // Fecha o arquivo com o codigo pre-processado
+    this->saida.clear();
+    // Coloca os opcodes no codigo objeto
+    for (i = 0; i < opcodes.size(); i++) {
+
+        saida += opcodes.at(i) + " ";
+    }
+
+    cout << saida;
+    codigoObjeto << saida;
+    codigoObjeto.close();          // Fecha o arquivo com o codigo fonte
 
 }
 
@@ -485,53 +475,42 @@ void Assembler::checaMneumonico(int *posicaotabela) {
         }
     }
 	*/
-//recebe vector<string>
-// 
 
-int i,j;
-for (i = 0; i < this->vetorpalavras.size(); i++) {
-	//if gerais
-	
-	if (this->vetorpalavras.at(i) == "CONST") {
-		
-		this->opcodes.push_back(this->vetorpalavras.at(i + 1));
-		
-		i++; // pula palavra posterior
-	}
+    int i,j;
+    for (i = 0; i < this->vetor_palavras.size(); i++) {
+        //if gerais
 
+        if (this->vetor_palavras.at(i) == "CONST") {
 
-	else if (this->vetorpalavras.at(i) == "SPACE") {
-		//todo tratar vetor depois
-		if (this->vetorpalavras.size()-1 > i) {
-			for (j = 0; j < stoi(this->vetorpalavras.at(i + 1)); j++) {
-				this->opcodes.push_back("00");
-			}
-		}
-		else 
-			this->opcodes.push_back("00");
-	}
+            this->opcodes.push_back(this->vetor_palavras.at(i + 1));
 
-
-	// if nao gerais
-	
-	//label definida
-	else if (this->vetorpalavras.at(i).find(":") != std::string::npos) 
-	{
-		this->apoio = this->vetorpalavras.at(i).substr(0, this->vetorpalavras.at(i).find(":"));
-		tabeladesimbolo->ProcuraPendencias(this->apoio, *posicaotabela);
-		posicaotabela--;
-	}
-	//todo douradao
-	//label nao definida
-	else {
-		
-
-	}
-	posicaotabela++;
-}
+            i++; // pula palavra posterior
+        }
+        else if (this->vetor_palavras.at(i) == "SPACE") {
+            // Caso de declaracao de um vetor
+            if (this->vetor_palavras.size() - 1 > i) {
+                for (j = 0; j < stoi(this->vetor_palavras.at(i + 1)); j++) {
+                    this->opcodes.push_back("00");
+                }
+            }
+            // Caso de declaracao de uma variavel
+            else
+                this->opcodes.push_back("00");
+        }
+        // if nao gerais
+        // label definida
+        else if (this->vetor_palavras.at(i).find(":") != std::string::npos)
+        {
+            this->apoio = this->vetor_palavras.at(i).substr(0, this->vetor_palavras.at(i).find(":"));
+            tabela_de_simbolos->procuraPendencias(this->apoio, *posicaotabela);
+            posicaotabela--;
+        }
+            //todo douradao
+            //label nao definida
+        else {
 
 
-
-
-
+        }
+        posicaotabela++;
+    }
 }

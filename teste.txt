@@ -1,4 +1,4 @@
-﻿label: EQU 1
+label: EQU 1
 label2: EQU 0
 SECTION TEXT
 INPUT OLD_DATA			; comentario 1
