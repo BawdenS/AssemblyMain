@@ -1,5 +1,5 @@
 #include "TabelaDeSimbolos.h"
-
+#include <iostream>
 /**************
  * Construtor *
  *************/
@@ -46,6 +46,7 @@ void TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
     int i;
     int numero = 0;
     bool igual = false;
+
     for (i=0;i < this->ListadeNomes.size();i++)
     {
         if (nome == this->ListadeNomes.at(i)) {
@@ -54,10 +55,17 @@ void TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
         }
     }
     if (igual == true) {
-
+		
 
     }
     else {
+		vector<int> pendencias;
+		pendencias.push_back(posicao);
+		this->ListadeNomes.push_back(nome);
+		this->ListadePendencias.push_back(pendencias);
+		this->Endereco.push_back(0);
+		this->Definido.push_back(false);
+		//cout << nome << endl  << endl;
 
     }
 
@@ -65,7 +73,7 @@ void TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
 
 
 /***********************
- * Funcao que faz algo *
+ * Funcao que Procura alguma pendencia de endereco no codigo *
  **********************/
 void TabelaDeSimbolos::procuraPendencias(string nome, int posicao) {
     int i;

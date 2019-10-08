@@ -35,7 +35,7 @@ private:
     TabelaDeSimbolos* tabela_de_simbolos;
     string file_path, word[4], line, saida, apoio;
     int text_field_start, data_field_start, pc_codigo_fonte, pc_pre_processado,
-            line_opcode, flag_salva_linha;
+            line_opcode, flag_salva_linha, Linhacolunacontador;
     bool section_text_present = false;
 };
 

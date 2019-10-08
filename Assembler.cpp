@@ -85,8 +85,25 @@ void Assembler::passagemZero() {
                 }
             }
 
+
+			//trata o caso de achar uma virgula
+
+			for (i = 0; i < vetor_palavras.size(); i++)
+			{
+				if (vetor_palavras.at(i).find(",") != std::string::npos)
+				{
+					apoio = vetor_palavras.at(i).substr(vetor_palavras.at(i).find(",") + 1, vetor_palavras.at(i).size()-1);
+					vetor_palavras.at(i) = vetor_palavras.at(i).substr(0, vetor_palavras.at(i).find(","));
+					vetor_palavras.push_back(apoio);
+				}
+
+			}
+			
+
+
             // Apaga a linha
             this->apoio.clear();
+			
 
             //  Recria linha com valores substituidos
             for (i = 0; i < vetor_palavras.size(); i++) {
@@ -236,7 +253,7 @@ void Assembler::criaTabeladeUso(string linha)
  **********************************************/
 void Assembler::passagemUm(string preProcessado){
     int i = 0, posicaotabela = 0;
-
+	this->Linhacolunacontador = 0;
     ifstream codigoPreProcessado("Codigo Pre-processado.txt");     // Abre o arquivo que contem o codigo pre-processado
     ofstream codigoObjeto("Codigo Objeto.txt");     // Abre o arquivo texto que contera o codigo objeto
 
@@ -289,17 +306,18 @@ void Assembler::checaMneumonico(int *posicaotabela) {
                 this->text_field_start = this->pc_pre_processado;
                 section_text_present = true;
                 cout << "Campo Text comeca na linha " << this->text_field_start << endl;
-            }
+				this->Linhacolunacontador--;
+			}
             else if(this->vetor_palavras.at(i+1) == "DATA"){
                 this->data_field_start = this->pc_pre_processado;
                 cout << "Campo Data comeca na linha " << this->data_field_start << endl;
-            }
+				this->Linhacolunacontador--;
+			}
             else
                 // todo - ter certeza de qual o tipo desse erro
                 cout <<  "Linha " << pc_pre_processado << "; Erro semantico???: Campo invalido" << endl;
 
             i++;    // pula palavra posterior (no caso TEXT ou DATA)
-
         }
         //if gerais
         else if (this->vetor_palavras.at(i) == "CONST") {
@@ -322,7 +340,7 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "SUB") {
-            this->opcodes.push_back("1");           // Coloca o opcode da instrucao no vetor
+            this->opcodes.push_back("2");           // Coloca o opcode da instrucao no vetor
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "MULT") {
@@ -380,7 +398,8 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             this->apoio = this->vetor_palavras.at(i).substr(0, this->vetor_palavras.at(i).find(":"));
             tabela_de_simbolos->procuraPendencias(this->apoio, *posicaotabela);
             posicaotabela--;
-        }
+			this->Linhacolunacontador--;
+		}
         //todo douradao
         //label nao definida
         else {
@@ -388,6 +407,7 @@ void Assembler::checaMneumonico(int *posicaotabela) {
 
         }
         posicaotabela++;
+		this->Linhacolunacontador++;
     }
 }
 
@@ -405,7 +425,8 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
         }
         else{
             // todo - dar push_back nos enderecos dos operandos, nao na string dos operandos
-            this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+1));
+			tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra+1), this->Linhacolunacontador);
+			this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+1));
             *posicao_da_palavra++;    // pula palavra posterior
         }
     }
