@@ -11,8 +11,8 @@ public:
     TabelaDeSimbolos();
     ~TabelaDeSimbolos();
     void elementoDefinido(string nome, int posicao);    // funcao que acrescenta um elemento na tabela de simbolos
-    void procuraElemento(string nome, int posicao);     // funcao que procura string atual na tabela de simbolos
-    void procuraPendencias(string nome, int posicao);
+    string procuraElemento(string nome, int posicao);     // funcao que procura string atual na tabela de simbolos
+    void procuraPendencias(string nome, int posicao, vector<string> opcodes);
     void elementoNaoDefinido(string nome, int posicao);
 
 private:

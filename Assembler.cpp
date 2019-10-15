@@ -396,7 +396,9 @@ void Assembler::checaMneumonico(int *posicaotabela) {
         else if (this->vetor_palavras.at(i).find(":") != std::string::npos)
         {
             this->apoio = this->vetor_palavras.at(i).substr(0, this->vetor_palavras.at(i).find(":"));
-            tabela_de_simbolos->procuraPendencias(this->apoio, *posicaotabela);
+			//todo
+			//transformar em endereco o this->opcodes
+            tabela_de_simbolos->procuraPendencias(this->apoio, *posicaotabela, this->opcodes);
             posicaotabela--;
 			this->Linhacolunacontador--;
 		}
@@ -416,7 +418,7 @@ void Assembler::checaMneumonico(int *posicaotabela) {
  * Funcao trata dos erros presentes do codigo pre-processado *
  ************************************************************/
 void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
-
+	string aux;
     // Erros na quantidade de operandos
     if(n_operandos == 1)
     {
@@ -425,7 +427,10 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
         }
         else{
             // todo - dar push_back nos enderecos dos operandos, nao na string dos operandos
-			tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra+1), this->Linhacolunacontador);
+			//tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->Linhacolunacontador, this->opcodes.at(0));
+			//aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra +1), this->Linhacolunacontador);
+			//cout << this->vetor_palavras.at(*posicao_da_palavra + 1) << "    " << this->Linhacolunacontador << endl;
+			//cout << "endereco:  "<< aux << endl << endl;
 			this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+1));
             *posicao_da_palavra++;    // pula palavra posterior
         }

@@ -1,5 +1,7 @@
 #include "TabelaDeSimbolos.h"
 #include <iostream>
+#include <vector>
+#include <string>
 /**************
  * Construtor *
  *************/
@@ -42,7 +44,7 @@ void TabelaDeSimbolos::elementoNaoDefinido(string nome, int posicao) {
 /*********************************************************
  * Funcao que procura string atual na tabela de simbolos *
  ********************************************************/
-void TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
+string TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
     int i;
     int numero = 0;
     bool igual = false;
@@ -55,8 +57,18 @@ void TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
         }
     }
     if (igual == true) {
-		
-
+		//se o nome ja esta na tabela e esta definido entao esse if sera verdadeiro
+		if (this->Definido.at(numero) == true) {
+		//todo conferir erro por aqui retornando o valor errado ou o valor armazenado esta errado
+		//se ter erro eh por aqui
+		// retornar endereco de variavel ja definido
+			return to_string(this->Endereco.at(numero));
+		}
+		else {
+		//retorna -1 e adiciona na lista de pendencia algo a ser resolvido em outra funçao
+			this->ListadePendencias.at(numero).push_back(posicao);
+			return "-1";
+		}
     }
     else {
 		vector<int> pendencias;
@@ -66,7 +78,7 @@ void TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
 		this->Endereco.push_back(0);
 		this->Definido.push_back(false);
 		//cout << nome << endl  << endl;
-
+		return "-1";
     }
 
 }
@@ -75,7 +87,9 @@ void TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
 /***********************
  * Funcao que Procura alguma pendencia de endereco no codigo *
  **********************/
-void TabelaDeSimbolos::procuraPendencias(string nome, int posicao) {
+//todo
+//transformar em ponteiro vector <string> * opcodes
+void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string> opcodes) {
     int i;
     int numero = 0;
     bool igual = false;
@@ -87,13 +101,19 @@ void TabelaDeSimbolos::procuraPendencias(string nome, int posicao) {
         }
     }
     if (igual == true) {
+		//todo conferir erro daqui
+		//se ter erro deve ser por aqui
         //Resolve pendencia
-        this->ListadePendencias.at(numero);
+		while (!this->ListadePendencias.at(numero).empty()) {
+			opcodes.at(this->ListadePendencias.at(numero).back()) = this->Endereco.at(numero);
+			this->ListadePendencias.at(numero).pop_back();
+		}
+		
         //vector<string>
     }
-    else {
+    
         //Adciona novo elemento
         this->elementoDefinido(nome, posicao);
-    }
+		
 
 }
