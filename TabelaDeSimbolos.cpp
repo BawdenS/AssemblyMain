@@ -62,12 +62,14 @@ string TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
 		//todo conferir erro por aqui retornando o valor errado ou o valor armazenado esta errado
 		//se ter erro eh por aqui
 		// retornar endereco de variavel ja definido
+			//cout << "NOME:  " << this->ListadeNomes.at(numero) << endl;
+			//cout <<"ENDERECO: "<< this->Endereco.at(numero) << endl;
 			return to_string(this->Endereco.at(numero));
 		}
 		else {
 		//retorna -1 e adiciona na lista de pendencia algo a ser resolvido em outra funçao
 			this->ListadePendencias.at(numero).push_back(posicao);
-			return "-1";
+			return "0";
 		}
     }
     else {
@@ -78,7 +80,7 @@ string TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
 		this->Endereco.push_back(0);
 		this->Definido.push_back(false);
 		//cout << nome << endl  << endl;
-		return "-1";
+		return "0";
     }
 
 }
@@ -89,7 +91,7 @@ string TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
  **********************/
 //todo
 //transformar em ponteiro vector <string> * opcodes
-void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string> opcodes) {
+void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string>* opcodes) {
     int i;
     int numero = 0;
     bool igual = false;
@@ -104,8 +106,12 @@ void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string
 		//todo conferir erro daqui
 		//se ter erro deve ser por aqui
         //Resolve pendencia
+		//cout << "NOME:  " << nome << endl;
 		while (!this->ListadePendencias.at(numero).empty()) {
-			opcodes.at(this->ListadePendencias.at(numero).back()) = this->Endereco.at(numero);
+			//cout << "POSICAO PENDENCIA:  " << this->Endereco.at(numero) <<endl;
+			this->Endereco.at(numero) = posicao;
+			opcodes->at(this->ListadePendencias.at(numero).back()) = to_string(posicao);
+			//*opcodes.at(this->ListadePendencias.at(numero).back()) = this->Endereco.at(numero);
 			this->ListadePendencias.at(numero).pop_back();
 		}
 		
@@ -113,7 +119,10 @@ void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string
     }
     
         //Adciona novo elemento
-        this->elementoDefinido(nome, posicao);
+	//cout << "NOME:  " << nome << endl;
+	//cout << "POSICAO:  " << posicao << endl;
+	this->elementoDefinido(nome, posicao);
+
 		
 
 }

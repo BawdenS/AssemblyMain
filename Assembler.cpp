@@ -299,19 +299,21 @@ void Assembler::checaMneumonico(int *posicaotabela) {
     int i,j;
 
     for (i = 0; i < this->vetor_palavras.size(); i++) {
-        // Reconhecimento dos campos TEXT e DATA
+		this->Linhacolunacontador++;
+		// Reconhecimento dos campos TEXT e DATA
         if (this->vetor_palavras.at(i) == "SECTION") {
-            // todo - tratar o erro de ter apenas SECTION, ou seja, nao existir a posicao i+1 nessa linha
+			this->Linhacolunacontador--;
+			// todo - tratar o erro de ter apenas SECTION, ou seja, nao existir a posicao i+1 nessa linha
             if(this->vetor_palavras.at(i+1) == "TEXT"){
                 this->text_field_start = this->pc_pre_processado;
                 section_text_present = true;
                 cout << "Campo Text comeca na linha " << this->text_field_start << endl;
-				this->Linhacolunacontador--;
+				
 			}
             else if(this->vetor_palavras.at(i+1) == "DATA"){
                 this->data_field_start = this->pc_pre_processado;
                 cout << "Campo Data comeca na linha " << this->data_field_start << endl;
-				this->Linhacolunacontador--;
+				//this->Linhacolunacontador--;
 			}
             else
                 // todo - ter certeza de qual o tipo desse erro
@@ -327,9 +329,12 @@ void Assembler::checaMneumonico(int *posicaotabela) {
         else if (this->vetor_palavras.at(i) == "SPACE") {
             // Caso de declaracao de um vetor
             if (this->vetor_palavras.size() - 1 > i) {
+				this->Linhacolunacontador += stoi(this->vetor_palavras.at(i + 1))-2;
                 for (j = 0; j < stoi(this->vetor_palavras.at(i + 1)); j++) {
                     this->opcodes.push_back("00");
+					
                 }
+				i++;//Pula palavra posterior
             }
             // Caso de declaracao de uma variavel
             else
@@ -395,12 +400,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
         // label definida
         else if (this->vetor_palavras.at(i).find(":") != std::string::npos)
         {
+			this->Linhacolunacontador--;
             this->apoio = this->vetor_palavras.at(i).substr(0, this->vetor_palavras.at(i).find(":"));
 			//todo
 			//transformar em endereco o this->opcodes
-            tabela_de_simbolos->procuraPendencias(this->apoio, *posicaotabela, this->opcodes);
+            tabela_de_simbolos->procuraPendencias(this->apoio, this->Linhacolunacontador, &this->opcodes);
             posicaotabela--;
-			this->Linhacolunacontador--;
+			
 		}
         //todo douradao
         //label nao definida
@@ -409,7 +415,7 @@ void Assembler::checaMneumonico(int *posicaotabela) {
 
         }
         posicaotabela++;
-		this->Linhacolunacontador++;
+		
     }
 }
 
@@ -427,11 +433,11 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
         }
         else{
             // todo - dar push_back nos enderecos dos operandos, nao na string dos operandos
-			//tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->Linhacolunacontador, this->opcodes.at(0));
-			//aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra +1), this->Linhacolunacontador);
-			//cout << this->vetor_palavras.at(*posicao_da_palavra + 1) << "    " << this->Linhacolunacontador << endl;
-			//cout << "endereco:  "<< aux << endl << endl;
-			this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+1));
+			tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->Linhacolunacontador);
+			aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra +1), this->Linhacolunacontador);
+			cout << this->vetor_palavras.at(*posicao_da_palavra + 1) << "    " << this->Linhacolunacontador << endl;
+			cout << "endereco:  "<< aux << endl << endl;
+			this->opcodes.push_back(aux);
             *posicao_da_palavra++;    // pula palavra posterior
         }
     }
