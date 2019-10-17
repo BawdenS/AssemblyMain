@@ -52,7 +52,7 @@ void Assembler::passagemZero() {
             getline(codigoFonte, this->line);        // Le cada linha do codigo fonte
 
             this->padrao();                   // Chama a funcao para retirar comentarios
-            this->pc_codigo_fonte++;                              // Incrementa o contador de progama a cada linha do codigo fonte
+            this->pc_codigo_fonte++;          // Incrementa o contador de progama a cada linha do codigo fonte
 
             // Coloca cada palavra em um vetor de palavras.
             istringstream iss(this->line);
@@ -299,21 +299,20 @@ void Assembler::checaMneumonico(int *posicaotabela) {
     int i,j;
 
     for (i = 0; i < this->vetor_palavras.size(); i++) {
-		
 		// Reconhecimento dos campos TEXT e DATA
-		if (this->vetor_palavras.at(i) == "SECTION") {
-			//this->Linhacolunacontador--;
-			
-			// todo - tratar o erro de ter apenas SECTION, ou seja, nao existir a posicao i+1 nessa linha
+		if (this->vetor_palavras.at(i) == "SECTION"/* || this->vetor_palavras.at(i) == "ï»¿SECTION"*/
+		) {
+		    //this->Linhacolunacontador--;
+            // todo - tratar o erro de ter apenas SECTION, ou seja, nao existir a posicao i+1 nessa linha
 			if (this->vetor_palavras.at(i + 1) == "TEXT") {
 				this->text_field_start = this->pc_pre_processado;
 				section_text_present = true;
-				cout << "Campo Text comeca na linha " << this->text_field_start << endl;
+//				cout << "Campo Text comeca na linha " << this->text_field_start << endl;
 
 			}
 			else if (this->vetor_palavras.at(i + 1) == "DATA") {
 				this->data_field_start = this->pc_pre_processado;
-				cout << "Campo Data comeca na linha " << this->data_field_start << endl;
+//				cout << "Campo Data comeca na linha " << this->data_field_start << endl;
 
 				//this->Linhacolunacontador--;
 			}
@@ -430,10 +429,10 @@ void Assembler::checaMneumonico(int *posicaotabela) {
 		}
         //todo douradao
         //label nao definida
-        else {
+//        else {
 
 
-        }
+//        }
         posicaotabela++;
 		
     }
