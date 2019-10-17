@@ -1,5 +1,9 @@
 Section text
-ADD UM
+ADD cinco
+copy l1 oito
+stop
 
 SECTION DATA
-UM: CONST 5
+cinco: CONST 1
+oito: const 8
+l1: space

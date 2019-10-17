@@ -389,7 +389,7 @@ void Assembler::checaMneumonico(int *posicaotabela) {
         else if (this->vetor_palavras.at(i) == "COPY") {
             this->opcodes.push_back("9");           // Coloca o opcode da instrucao no vetor
             // todo - talevez tenha que mudar esse 2
-//            trataErros(&i, 2);          // Chama a funcao de tratamento de erros
+            trataErros(&i, 2);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "LOAD") {
             this->opcodes.push_back("10");          // Coloca o opcode da instrucao no vetor
@@ -467,10 +467,29 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
             cout << "Linha " << pc_pre_processado << "; Erro sintatico: Quantidade de operandos invalida para a operacao" << endl;
         }
         else{
-            this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+1));
-            this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+2));
+            //todo - arrumar com a tabela de símbolos
+//            aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra +1), this->Linhacolunacontador);
+//            this->opcodes.push_back(aux);
+//            this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+2));
+//            *posicao_da_palavra++;    // pula palavra posterior
+//            *posicao_da_palavra++;    // pula palavra posterior
+//            this->Linhacolunacontador++;
+//            this->Linhacolunacontador++;
+
+            this->Linhacolunacontador++;
+
+            cout << "Primeiro: " << this->vetor_palavras.at(*posicao_da_palavra+1) << endl;
+            aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra+1), this->Linhacolunacontador);
+            this->opcodes.push_back(aux);
+
+            this->Linhacolunacontador++;
+            cout << "Segundo: " << this->vetor_palavras.at(*posicao_da_palavra+2) << endl;
+//            this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+2));
+            aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra+2), this->Linhacolunacontador);
+            this->opcodes.push_back(aux);
             *posicao_da_palavra++;    // pula palavra posterior
             *posicao_da_palavra++;    // pula palavra posterior
+
         }
     }
 
