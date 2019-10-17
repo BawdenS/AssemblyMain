@@ -299,37 +299,42 @@ void Assembler::checaMneumonico(int *posicaotabela) {
     int i,j;
 
     for (i = 0; i < this->vetor_palavras.size(); i++) {
-		this->Linhacolunacontador++;
+		
 		// Reconhecimento dos campos TEXT e DATA
-        if (this->vetor_palavras.at(i) == "SECTION") {
-			this->Linhacolunacontador--;
+		if (this->vetor_palavras.at(i) == "SECTION") {
+			//this->Linhacolunacontador--;
+			
 			// todo - tratar o erro de ter apenas SECTION, ou seja, nao existir a posicao i+1 nessa linha
-            if(this->vetor_palavras.at(i+1) == "TEXT"){
-                this->text_field_start = this->pc_pre_processado;
-                section_text_present = true;
-                cout << "Campo Text comeca na linha " << this->text_field_start << endl;
-				
+			if (this->vetor_palavras.at(i + 1) == "TEXT") {
+				this->text_field_start = this->pc_pre_processado;
+				section_text_present = true;
+				cout << "Campo Text comeca na linha " << this->text_field_start << endl;
+
 			}
-            else if(this->vetor_palavras.at(i+1) == "DATA"){
-                this->data_field_start = this->pc_pre_processado;
-                cout << "Campo Data comeca na linha " << this->data_field_start << endl;
+			else if (this->vetor_palavras.at(i + 1) == "DATA") {
+				this->data_field_start = this->pc_pre_processado;
+				cout << "Campo Data comeca na linha " << this->data_field_start << endl;
+
 				//this->Linhacolunacontador--;
 			}
-            else
-                // todo - ter certeza de qual o tipo desse erro
-                cout <<  "Linha " << pc_pre_processado << "; Erro semantico???: Campo invalido" << endl;
-
+			else 
+			{
+				// todo - ter certeza de qual o tipo desse erro
+				cout << "Linha " << pc_pre_processado << "; Erro semantico???: Campo invalido" << endl;
+			}
             i++;    // pula palavra posterior (no caso TEXT ou DATA)
         }
         //if gerais
         else if (this->vetor_palavras.at(i) == "CONST") {
-            this->opcodes.push_back(this->vetor_palavras.at(i + 1));
+			this->Linhacolunacontador++;
+			this->opcodes.push_back(this->vetor_palavras.at(i + 1));
             i++; // pula palavra posterior
         }
         else if (this->vetor_palavras.at(i) == "SPACE") {
-            // Caso de declaracao de um vetor
+			this->Linhacolunacontador++;
+			// Caso de declaracao de um vetor
             if (this->vetor_palavras.size() - 1 > i) {
-				this->Linhacolunacontador += stoi(this->vetor_palavras.at(i + 1))-2;
+				this->Linhacolunacontador += stoi(this->vetor_palavras.at(i + 1))-1;
                 for (j = 0; j < stoi(this->vetor_palavras.at(i + 1)); j++) {
                     this->opcodes.push_back("00");
 					
@@ -337,39 +342,49 @@ void Assembler::checaMneumonico(int *posicaotabela) {
 				i++;//Pula palavra posterior
             }
             // Caso de declaracao de uma variavel
-            else
-                this->opcodes.push_back("00");
-        }
+				else 
+				
+					this->opcodes.push_back("00");
+				
+			}
         else if (this->vetor_palavras.at(i) == "ADD") {
-            this->opcodes.push_back("1");           // Coloca o opcode da instrucao no vetor
-            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+			this->opcodes.push_back("1");           // Coloca o opcode da instrucao no vetor
+			this->Linhacolunacontador++;
+			trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "SUB") {
             this->opcodes.push_back("2");           // Coloca o opcode da instrucao no vetor
-            trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+			this->Linhacolunacontador++;
+			trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "MULT") {
             this->opcodes.push_back("3");           // Coloca o opcode da instrucao no vetor
+			this->Linhacolunacontador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "DIV") {
             this->opcodes.push_back("4");           // Coloca o opcode da instrucao no vetor
+			this->Linhacolunacontador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "JMP") {
             this->opcodes.push_back("5");           // Coloca o opcode da instrucao no vetor
+			this->Linhacolunacontador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "JMPN") {
             this->opcodes.push_back("6");           // Coloca o opcode da instrucao no vetor
+			this->Linhacolunacontador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "JMPP") {
             this->opcodes.push_back("7");           // Coloca o opcode da instrucao no vetor
+			this->Linhacolunacontador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "JMPZ") {
             this->opcodes.push_back("8");           // Coloca o opcode da instrucao no vetor
+			this->Linhacolunacontador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "COPY") {
@@ -379,28 +394,33 @@ void Assembler::checaMneumonico(int *posicaotabela) {
         }
         else if (this->vetor_palavras.at(i) == "LOAD") {
             this->opcodes.push_back("10");          // Coloca o opcode da instrucao no vetor
+			this->Linhacolunacontador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "STORE") {
             this->opcodes.push_back("11");          // Coloca o opcode da instrucao no vetor
+			this->Linhacolunacontador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "INPUT") {
             this->opcodes.push_back("12");          // Coloca o opcode da instrucao no vetor
+			this->Linhacolunacontador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "OUTPUT") {
             this->opcodes.push_back("13");          // Coloca o opcode da instrucao no vetor
+			this->Linhacolunacontador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "STOP") {
             this->opcodes.push_back("14");          // Coloca o opcode da instrucao no vetor
+			this->Linhacolunacontador++;
         }
         // if nao gerais
         // label definida
         else if (this->vetor_palavras.at(i).find(":") != std::string::npos)
         {
-			this->Linhacolunacontador--;
+			//this->Linhacolunacontador--;
             this->apoio = this->vetor_palavras.at(i).substr(0, this->vetor_palavras.at(i).find(":"));
 			//todo
 			//transformar em endereco o this->opcodes
@@ -433,16 +453,17 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
         }
         else{
             // todo - dar push_back nos enderecos dos operandos, nao na string dos operandos
-			tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->Linhacolunacontador);
 			aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra +1), this->Linhacolunacontador);
-			cout << this->vetor_palavras.at(*posicao_da_palavra + 1) << "    " << this->Linhacolunacontador << endl;
-			cout << "endereco:  "<< aux << endl << endl;
+			//cout << this->vetor_palavras.at(*posicao_da_palavra + 1) << "    " << this->Linhacolunacontador << endl;
+			//cout << "endereco:  "<< aux << endl << endl;
 			this->opcodes.push_back(aux);
+			this->Linhacolunacontador++;
             *posicao_da_palavra++;    // pula palavra posterior
         }
     }
     // todo - pensar melhor isso aqui, pois COPY é com ',' nao ' '
     else if(n_operandos == 2){
+		//todo realizar o tratamento do COPY
         if(this->vetor_palavras.size() <= *posicao_da_palavra+2){
             cout << "Linha " << pc_pre_processado << "; Erro sintatico: Quantidade de operandos invalida para a operacao" << endl;
         }

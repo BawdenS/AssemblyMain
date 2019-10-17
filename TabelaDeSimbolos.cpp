@@ -48,11 +48,13 @@ string TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
     int i;
     int numero = 0;
     bool igual = false;
-
+	
     for (i=0;i < this->ListadeNomes.size();i++)
     {
+		
         if (nome == this->ListadeNomes.at(i)) {
-            igual = true;
+			
+			igual = true;
             numero = i; // posicao da lista
         }
     }
@@ -67,7 +69,8 @@ string TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
 			return to_string(this->Endereco.at(numero));
 		}
 		else {
-		//retorna -1 e adiciona na lista de pendencia algo a ser resolvido em outra funçao
+		//retorna 0 e adiciona na lista de pendencia algo a ser resolvido em outra funçao
+			
 			this->ListadePendencias.at(numero).push_back(posicao);
 			return "0";
 		}
@@ -108,7 +111,6 @@ void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string
         //Resolve pendencia
 		//cout << "NOME:  " << nome << endl;
 		while (!this->ListadePendencias.at(numero).empty()) {
-			//cout << "POSICAO PENDENCIA:  " << this->Endereco.at(numero) <<endl;
 			this->Endereco.at(numero) = posicao;
 			opcodes->at(this->ListadePendencias.at(numero).back()) = to_string(posicao);
 			//*opcodes.at(this->ListadePendencias.at(numero).back()) = this->Endereco.at(numero);
