@@ -387,7 +387,9 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
         }
         else if (this->vetor_palavras.at(i) == "COPY") {
-            this->opcodes.push_back("9");           // Coloca o opcode da instrucao no vetor
+            this->opcodes.push_back("9"); 
+			this->Linhacolunacontador++;
+			// Coloca o opcode da instrucao no vetor
             // todo - talevez tenha que mudar esse 2
             trataErros(&i, 2);          // Chama a funcao de tratamento de erros
         }
@@ -476,7 +478,7 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
 //            this->Linhacolunacontador++;
 //            this->Linhacolunacontador++;
 
-            this->Linhacolunacontador++;
+            
 
             cout << "Primeiro: " << this->vetor_palavras.at(*posicao_da_palavra+1) << endl;
             aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra+1), this->Linhacolunacontador);
@@ -487,6 +489,7 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
 //            this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+2));
             aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra+2), this->Linhacolunacontador);
             this->opcodes.push_back(aux);
+			this->Linhacolunacontador++;
             *posicao_da_palavra++;    // pula palavra posterior
             *posicao_da_palavra++;    // pula palavra posterior
 
