@@ -98,6 +98,7 @@ void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string
     int i;
     int numero = 0;
     bool igual = false;
+	int auxint = 0;
     for (i = 0; i < this->ListadeNomes.size(); i++)
     {
         if (nome == this->ListadeNomes.at(i)) {
@@ -112,7 +113,11 @@ void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string
 		//cout << "NOME:  " << nome << endl;
 		while (!this->ListadePendencias.at(numero).empty()) {
 			this->Endereco.at(numero) = posicao;
-			opcodes->at(this->ListadePendencias.at(numero).back()) = to_string(posicao);
+			auxint = stoi(opcodes->at(this->ListadePendencias.at(numero).back()));
+			
+			opcodes->at(this->ListadePendencias.at(numero).back()) = to_string(posicao + auxint);
+			//cout << "nome de:  "<< nome << endl;
+			//cout << to_string(auxint) << endl;
 			//*opcodes.at(this->ListadePendencias.at(numero).back()) = this->Endereco.at(numero);
 			this->ListadePendencias.at(numero).pop_back();
 		}

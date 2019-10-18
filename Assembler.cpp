@@ -125,6 +125,7 @@ void Assembler::passagemZero() {
             if (this->flag_salva_linha == 1) {
 
                 if (vetor_palavras.size() > 1) {
+					
                     this->saida = this->apoio + "\n";
                     //this->pc_pre_processado++;
                 }
@@ -132,7 +133,11 @@ void Assembler::passagemZero() {
                     this->saida = this->apoio;
                 }
                 else {
-                    this->saida = this->apoio + "\n";
+					if (this->apoio != "") 
+					{
+						this->saida = this->apoio + "\n";
+					}
+					else this->saida = this->apoio;
                     //this->pc_pre_processado++;
                 }
 
@@ -446,6 +451,7 @@ void Assembler::checaMneumonico(int *posicaotabela) {
  ************************************************************/
 void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
 	string aux;
+	int auxint;
     // Erros na quantidade de operandos
     if(n_operandos == 1)
     {
@@ -453,11 +459,21 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
             cout << "Linha " << pc_pre_processado << "; Erro sintatico: Quantidade de operandos invalida para a operacao" << endl;
         }
         else{
-            // todo - dar push_back nos enderecos dos operandos, nao na string dos operandos
-			aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra +1), this->Linhacolunacontador);
-			//cout << this->vetor_palavras.at(*posicao_da_palavra + 1) << "    " << this->Linhacolunacontador << endl;
-			//cout << "endereco:  "<< aux << endl << endl;
-			this->opcodes.push_back(aux);
+            //se achar o sinal de + eh necessario separar ele no aux e acessar a posicao de opcodes e salvar o que esta depois do "+"
+			if (this->vetor_palavras.at(*posicao_da_palavra + 1).find("+") != std::string::npos) {
+				aux = this->vetor_palavras.at(*posicao_da_palavra + 1).substr(0, this->vetor_palavras.at(*posicao_da_palavra + 1).find("+"));
+				aux = this->tabela_de_simbolos->procuraElemento(aux, this->Linhacolunacontador);
+				auxint = stoi(aux) + stoi(vetor_palavras.at(*posicao_da_palavra + 1).substr(this->vetor_palavras.at(*posicao_da_palavra + 1).find("+")+1, this->vetor_palavras.at(*posicao_da_palavra + 1).size()-1));
+				
+				aux = to_string(auxint);
+				this->opcodes.push_back(aux);
+
+			}
+			else {
+				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->Linhacolunacontador);
+
+				this->opcodes.push_back(aux);
+			}
 			this->Linhacolunacontador++;
             *posicao_da_palavra++;    // pula palavra posterior
         }
@@ -469,28 +485,47 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
             cout << "Linha " << pc_pre_processado << "; Erro sintatico: Quantidade de operandos invalida para a operacao" << endl;
         }
         else{
-            //todo - arrumar com a tabela de símbolos
-//            aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra +1), this->Linhacolunacontador);
-//            this->opcodes.push_back(aux);
-//            this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+2));
-//            *posicao_da_palavra++;    // pula palavra posterior
-//            *posicao_da_palavra++;    // pula palavra posterior
-//            this->Linhacolunacontador++;
-//            this->Linhacolunacontador++;
+			
+			if (this->vetor_palavras.at(*posicao_da_palavra + 1).find("+") != std::string::npos) {
+				aux = this->vetor_palavras.at(*posicao_da_palavra + 1).substr(0, this->vetor_palavras.at(*posicao_da_palavra + 1).find("+"));
+				aux = this->tabela_de_simbolos->procuraElemento(aux, this->Linhacolunacontador);
+				auxint = stoi(aux) + stoi(vetor_palavras.at(*posicao_da_palavra + 1).substr(this->vetor_palavras.at(*posicao_da_palavra + 1).find("+") + 1, this->vetor_palavras.at(*posicao_da_palavra + 1).size() - 1));
 
-            
+				aux = to_string(auxint);
+				this->opcodes.push_back(aux);
 
-            cout << "Primeiro: " << this->vetor_palavras.at(*posicao_da_palavra+1) << endl;
+			}
+			else {
+				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->Linhacolunacontador);
+
+				this->opcodes.push_back(aux);
+			}
+            /*
             aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra+1), this->Linhacolunacontador);
             this->opcodes.push_back(aux);
-
-            this->Linhacolunacontador++;
-            cout << "Segundo: " << this->vetor_palavras.at(*posicao_da_palavra+2) << endl;
-//            this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+2));
-            aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra+2), this->Linhacolunacontador);
-            this->opcodes.push_back(aux);
+            */
 			this->Linhacolunacontador++;
-            *posicao_da_palavra++;    // pula palavra posterior
+			if (this->vetor_palavras.at(*posicao_da_palavra + 2).find("+") != std::string::npos) {
+				aux = this->vetor_palavras.at(*posicao_da_palavra + 2).substr(0, this->vetor_palavras.at(*posicao_da_palavra + 2).find("+"));
+				aux = this->tabela_de_simbolos->procuraElemento(aux, this->Linhacolunacontador);
+				auxint = stoi(aux) + stoi(vetor_palavras.at(*posicao_da_palavra + 2).substr(this->vetor_palavras.at(*posicao_da_palavra + 2).find("+") + 1, this->vetor_palavras.at(*posicao_da_palavra + 2).size() - 1));
+
+				aux = to_string(auxint);
+				this->opcodes.push_back(aux);
+
+			}
+			else {
+				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 2), this->Linhacolunacontador);
+
+				this->opcodes.push_back(aux);
+			}
+//            this->opcodes.push_back(this->vetor_palavras.at(*posicao_da_palavra+2));
+            /*aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra+2), this->Linhacolunacontador);
+            this->opcodes.push_back(aux);
+			*/
+			this->Linhacolunacontador++;
+            
+			*posicao_da_palavra++;    // pula palavra posterior
             *posicao_da_palavra++;    // pula palavra posterior
 
         }
