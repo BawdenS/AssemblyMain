@@ -253,20 +253,25 @@ void Assembler::checaMneumonico(int *posicaotabela) {
 		// Reconhecimento dos campos TEXT e DATA
 		if (this->vetor_palavras.at(i) == "SECTION") {
             // todo - tratar o erro de ter apenas SECTION, ou seja, nao existir a posicao i+1 nessa linha
-			if (this->vetor_palavras.at(i + 1) == "TEXT") {
-				this->text_field_start = this->pc_pre_processado;
-				section_text_present = true;
+            if(this->vetor_palavras.size() > i+1){
+                if (this->vetor_palavras.at(i + 1) == "TEXT") {
+                    this->text_field_start = this->pc_pre_processado;
+                    section_text_present = true;
 //				cout << "Campo Text comeca na linha " << this->text_field_start << endl;
-			}
-			else if (this->vetor_palavras.at(i + 1) == "DATA") {
-				this->data_field_start = this->pc_pre_processado;
+                }
+                else if (this->vetor_palavras.at(i + 1) == "DATA") {
+                    this->data_field_start = this->pc_pre_processado;
 //				cout << "Campo Data comeca na linha " << this->data_field_start << endl;
-			}
-			else 
-			{
-				// todo - ter certeza de qual o tipo desse erro
-				cout << "Linha " << pc_pre_processado << "; Erro semantico???: Campo invalido" << endl;
-			}
+                }
+                else
+                {
+                    // todo - ter certeza de qual o tipo desse erro
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico???: Secao invalido" << endl;
+                }
+            }
+            else{
+                cout << "Linha " << pc_pre_processado << "; Erro semantico???: Secao invalido" << endl;
+            }
 
             i++;    // pula palavra posterior (no caso TEXT ou DATA)
         }
@@ -275,6 +280,18 @@ void Assembler::checaMneumonico(int *posicaotabela) {
 			this->linha_coluna_contador++;
 			this->opcodes.push_back(this->vetor_palavras.at(i + 1));
             i++; // pula palavra posterior
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado < data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Diretiva CONST na secao errada0" << endl;
+                }
+            }
+            // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado > text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Diretiva CONST na secao errada1" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "SPACE") {
 			this->linha_coluna_contador++;
@@ -290,8 +307,21 @@ void Assembler::checaMneumonico(int *posicaotabela) {
 				i++;    //Pula palavra posterior
             }
             // Caso de declaracao de uma variavel
-            else
+            else{
                 this->opcodes.push_back("00");
+            }
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado < data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Diretiva SPACE na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado > text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Diretiva SPACE na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "ADD") {
 			this->opcodes.push_back("1");           // Coloca o opcode da instrucao no vetor
