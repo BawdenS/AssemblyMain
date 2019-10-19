@@ -279,29 +279,45 @@ void Assembler::checaMneumonico(int *posicaotabela) {
         else if (this->vetor_palavras.at(i) == "CONST") {
 			this->linha_coluna_contador++;
 			this->opcodes.push_back(this->vetor_palavras.at(i + 1));
-            i++; // pula palavra posterior
 
             // Erro de diretiva na secao errada
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado < data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Diretiva CONST na secao errada0" << endl;
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Diretiva "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
                 }
             }
             // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado > text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: Diretiva CONST na secao errada1" << endl;
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Diretiva "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
             }
+
+            i++; // pula palavra posterior
         }
         else if (this->vetor_palavras.at(i) == "SPACE") {
 			this->linha_coluna_contador++;
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado < data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Diretiva "<< this->vetor_palavras.at(i)
+                         <<" na secao errada " << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado > text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Diretiva "<< this->vetor_palavras.at(i)
+                     <<" na secao errada " << endl;
+            }
 
 			// Caso de declaracao de um vetor
             if (this->vetor_palavras.size() - 1 > i) {
 				this->linha_coluna_contador += stoi(this->vetor_palavras.at(i + 1)) - 1;
                 for (j = 0; j < stoi(this->vetor_palavras.at(i + 1)); j++) {
                     this->opcodes.push_back("00");
-					
                 }
 
 				i++;    //Pula palavra posterior
@@ -310,23 +326,25 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             else{
                 this->opcodes.push_back("00");
             }
-
-            // Erro de diretiva na secao errada
-            // Secao DATA posterior a secao TEXT
-            if(data_field_start > text_field_start){
-                if(pc_pre_processado < data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Diretiva SPACE na secao errada" << endl;
-                }
-            }
-                // Secao DATA anterior a secao TEXT
-            else if(pc_pre_processado > text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: Diretiva SPACE na secao errada" << endl;
-            }
         }
         else if (this->vetor_palavras.at(i) == "ADD") {
 			this->opcodes.push_back("1");           // Coloca o opcode da instrucao no vetor
 			this->linha_coluna_contador++;
 			trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "SUB") {
             this->opcodes.push_back("2");           // Coloca o opcode da instrucao no vetor
