@@ -13,13 +13,12 @@ public:
     void elementoDefinido(string nome, int posicao);    // funcao que acrescenta um elemento na tabela de simbolos
     string procuraElemento(string nome, int posicao);     // funcao que procura string atual na tabela de simbolos
     void procuraPendencias(string nome, int posicao, vector<string>* opcodes);
-    void elementoNaoDefinido(string nome, int posicao);
 
 private:
-    vector<string> ListadeNomes;
-    vector<vector<int>> ListadePendencias;
-    vector<int> Endereco;
-    vector<bool> Definido;
+    vector<string> lista_de_nomes;
+    vector<vector<int>> lista_de_pendencias;
+    vector<int> endereco;
+    vector<bool> definido;
 };
 
 #endif //TRABALHO1_TABELA_DE_SIMBOLOS_H

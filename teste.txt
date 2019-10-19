@@ -1,6 +1,6 @@
 Section text
 ADD cinco+5
-copy l1,oito
+copy l1+4,oito+2
 stop
 add l1
 SECTION DATA
