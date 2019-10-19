@@ -350,66 +350,248 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             this->opcodes.push_back("2");           // Coloca o opcode da instrucao no vetor
 			this->linha_coluna_contador++;
 			trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "MULT") {
             this->opcodes.push_back("3");           // Coloca o opcode da instrucao no vetor
 			this->linha_coluna_contador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "DIV") {
             this->opcodes.push_back("4");           // Coloca o opcode da instrucao no vetor
 			this->linha_coluna_contador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "JMP") {
             this->opcodes.push_back("5");           // Coloca o opcode da instrucao no vetor
 			this->linha_coluna_contador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "JMPN") {
             this->opcodes.push_back("6");           // Coloca o opcode da instrucao no vetor
 			this->linha_coluna_contador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "JMPP") {
             this->opcodes.push_back("7");           // Coloca o opcode da instrucao no vetor
 			this->linha_coluna_contador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "JMPZ") {
             this->opcodes.push_back("8");           // Coloca o opcode da instrucao no vetor
 			this->linha_coluna_contador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "COPY") {
             this->opcodes.push_back("9"); 
 			this->linha_coluna_contador++;
 			// Coloca o opcode da instrucao no vetor
             trataErros(&i, 2);          // Chama a funcao de tratamento de erros
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "LOAD") {
             this->opcodes.push_back("10");          // Coloca o opcode da instrucao no vetor
 			this->linha_coluna_contador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "STORE") {
             this->opcodes.push_back("11");          // Coloca o opcode da instrucao no vetor
 			this->linha_coluna_contador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "INPUT") {
             this->opcodes.push_back("12");          // Coloca o opcode da instrucao no vetor
 			this->linha_coluna_contador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "OUTPUT") {
             this->opcodes.push_back("13");          // Coloca o opcode da instrucao no vetor
 			this->linha_coluna_contador++;
             trataErros(&i, 1);          // Chama a funcao de tratamento de erros
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         else if (this->vetor_palavras.at(i) == "STOP") {
             this->opcodes.push_back("14");          // Coloca o opcode da instrucao no vetor
 			this->linha_coluna_contador++;
+
+            // Erro de diretiva na secao errada
+            // Secao DATA posterior a secao TEXT
+            if(data_field_start > text_field_start){
+                if(pc_pre_processado > data_field_start){
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                         <<" na secao errada" << endl;
+                }
+            }
+                // Secao DATA anterior a secao TEXT
+            else if(pc_pre_processado < text_field_start){
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                     <<" na secao errada" << endl;
+            }
         }
         // if nao gerais
         // label definida
