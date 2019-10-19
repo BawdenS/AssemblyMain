@@ -1,9 +1,11 @@
 Section text
 ADD cinco+5
 copy l1+4,oito+2
+asd l1
 stop
 add l1
-SECTION DATA
+SECTION data
 cinco: CONST 1
 oito: const 8
 l1: space 6
+l4: space

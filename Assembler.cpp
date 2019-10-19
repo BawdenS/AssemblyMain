@@ -336,13 +336,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado > data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                          <<" na secao errada" << endl;
                 }
             }
                 // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado < text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                cout << "Linha " << pc_pre_processado << "; Erro semantico:Iinstrucao "<< this->vetor_palavras.at(i-1)
                      <<" na secao errada" << endl;
             }
         }
@@ -355,13 +355,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado > data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                          <<" na secao errada" << endl;
                 }
             }
                 // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado < text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                      <<" na secao errada" << endl;
             }
         }
@@ -374,13 +374,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado > data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                          <<" na secao errada" << endl;
                 }
             }
                 // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado < text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                      <<" na secao errada" << endl;
             }
         }
@@ -393,13 +393,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado > data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                          <<" na secao errada" << endl;
                 }
             }
                 // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado < text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                      <<" na secao errada" << endl;
             }
         }
@@ -412,13 +412,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado > data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                          <<" na secao errada" << endl;
                 }
             }
                 // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado < text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                      <<" na secao errada" << endl;
             }
         }
@@ -431,13 +431,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado > data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                          <<" na secao errada" << endl;
                 }
             }
                 // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado < text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                      <<" na secao errada" << endl;
             }
         }
@@ -450,13 +450,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado > data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                          <<" na secao errada" << endl;
                 }
             }
                 // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado < text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                      <<" na secao errada" << endl;
             }
         }
@@ -469,13 +469,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado > data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                          <<" na secao errada" << endl;
                 }
             }
                 // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado < text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                      <<" na secao errada" << endl;
             }
         }
@@ -489,13 +489,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado > data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-2)
                          <<" na secao errada" << endl;
                 }
             }
                 // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado < text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-2)
                      <<" na secao errada" << endl;
             }
         }
@@ -508,13 +508,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado > data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                          <<" na secao errada" << endl;
                 }
             }
                 // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado < text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                      <<" na secao errada" << endl;
             }
         }
@@ -527,13 +527,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado > data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                          <<" na secao errada" << endl;
                 }
             }
                 // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado < text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                      <<" na secao errada" << endl;
             }
         }
@@ -546,13 +546,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado > data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                          <<" na secao errada" << endl;
                 }
             }
                 // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado < text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                      <<" na secao errada" << endl;
             }
         }
@@ -565,13 +565,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
                 if(pc_pre_processado > data_field_start){
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i)
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                          <<" na secao errada" << endl;
                 }
             }
                 // Secao DATA anterior a secao TEXT
             else if(pc_pre_processado < text_field_start){
-                cout << "Linha " << pc_pre_processado << "; Erro semantico: instrucao "<< this->vetor_palavras.at(i)
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Instrucao "<< this->vetor_palavras.at(i-1)
                      <<" na secao errada" << endl;
             }
         }
@@ -601,14 +601,13 @@ void Assembler::checaMneumonico(int *posicaotabela) {
             this->apoio = this->vetor_palavras.at(i).substr(0, this->vetor_palavras.at(i).find(":"));
             tabela_de_simbolos->procuraPendencias(this->apoio, this->linha_coluna_contador, &this->opcodes);
             posicaotabela--;
-			
 		}
-        //todo douradao
         //label nao definida
-//        else {
-
-
-//        }
+        else {
+            cout << "Linha " << pc_pre_processado << "; Erro lexico: instrucao ou diretiva "<< this->vetor_palavras.at(i)
+                 <<" invalida" << endl;
+            i++;
+        }
         posicaotabela++;
 		
     }
@@ -640,9 +639,9 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
 			else {
 				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->linha_coluna_contador);
 				this->opcodes.push_back(aux);
-			}
+            }
 			this->linha_coluna_contador++;
-            *posicao_da_palavra++;    // pula palavra posterior
+            *posicao_da_palavra+=1;    // pula palavra posterior
         }
     }
     else if(n_operandos == 2){
@@ -680,8 +679,8 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
 
 			this->linha_coluna_contador++;
             
-			*posicao_da_palavra++;    // pula palavra posterior
-            *posicao_da_palavra++;    // pula palavra posterior
+			*posicao_da_palavra+= 1;    // pula palavra posterior
+            *posicao_da_palavra+= 1;    // pula palavra posterior
 
         }
     }
