@@ -23,7 +23,7 @@ private:
     void passagemUm(string preProcessado);        // Funcao que separa inicia a primeira passagem de fato
     void checaMneumonico(int *posicaotabela);     // Funcao para tratamento de erros na linha
     void trataErros(int *posicao_da_palavra, int n_operandos);     // Funcao que trata dos erros presentes do codigo pre-processado
-
+	string hexad(string);
     vector<string> lista_de_opcode;
     vector<string> lista_de_diretivas;
     vector<string> lista_temp;

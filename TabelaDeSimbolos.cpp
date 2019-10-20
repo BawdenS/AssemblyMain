@@ -1,5 +1,5 @@
 #include "TabelaDeSimbolos.h"
-
+#include <iostream>
 /**************
  * Construtor *
  *************/
@@ -10,13 +10,14 @@ TabelaDeSimbolos::TabelaDeSimbolos() {
  * Destrutor *
  *************/
 TabelaDeSimbolos::~TabelaDeSimbolos() {
+	
 }
 
 
 /***********************************************************
  * Funcao que acrescenta um elemento na tabela de simbolos *
  **********************************************************/
-void TabelaDeSimbolos::elementoDefinido(string nome, int posicao) {
+void TabelaDeSimbolos::elementoDefinido(string nome, int posicao, string tipo) {
     vector<int> pendencia;
 
     pendencia.push_back(-1);
@@ -24,13 +25,14 @@ void TabelaDeSimbolos::elementoDefinido(string nome, int posicao) {
     this->endereco.push_back(posicao);
     this->definido.push_back(true);
     this->lista_de_pendencias.push_back(pendencia);
+	this->tipo.push_back(tipo);
 }
 
 
 /*********************************************************
  * Funcao que procura string atual na tabela de simbolos *
  ********************************************************/
-string TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
+string TabelaDeSimbolos::procuraElemento(string nome, int posicao, string anterior) {
     int i, numero = 0;
     bool igual = false;
 	
@@ -43,6 +45,10 @@ string TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
     }
     if (igual == true) {
 		if (this->definido.at(numero) == true) {
+			//todo cout que fala os erros de substituicao
+			if (anterior == "STORE" && this->tipo.at(numero) == "CONST") {
+				cout << "ERRO SEMANTICO LINHA : TENTATIVA DE ALTERAR VALOR CONST" << endl;
+			}
 			return to_string(this->endereco.at(numero));
 		}
 		else {
@@ -65,9 +71,20 @@ string TabelaDeSimbolos::procuraElemento(string nome, int posicao) {
 /*************************************************************
  * Funcao que procura alguma pendencia de endereco no codigo *
  ************************************************************/
-void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string>* opcodes) {
+void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string>* opcodes, int flagtipos) {
     int i, numero = 0, auxint = 0;
     bool igual = false;
+	string aux;
+	//traduz a flag para um tipo
+	if (flagtipos == 0) {
+		aux = "SPACE";
+	}
+	else if (flagtipos == 1) {
+		aux = "CONST";
+	}
+	else if (flagtipos == 2) {
+		aux = "ROTULO";
+	}
 
     for (i = 0; i < this->lista_de_nomes.size(); i++)
     {
@@ -77,6 +94,7 @@ void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string
         }
     }
     if (igual == true) {
+		cout << "NOME: "<< this->lista_de_nomes.at(numero) << "  TIPO:  "<< aux << endl;
 		while (!this->lista_de_pendencias.at(numero).empty()) {
 			this->endereco.at(numero) = posicao;
 			auxint = stoi(opcodes->at(this->lista_de_pendencias.at(numero).back()));
@@ -86,5 +104,5 @@ void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string
     }
     
     //Adciona novo elemento
-	this->elementoDefinido(nome, posicao);
+	this->elementoDefinido(nome, posicao, aux);
 }

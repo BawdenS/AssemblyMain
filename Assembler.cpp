@@ -345,7 +345,7 @@ void Assembler::passagemUm(string preProcessado){
  ************************************************/
 void Assembler::checaMneumonico(int *posicaotabela) {
     int i,j;
-
+	int flagtipo;
     for (i = 0; i < this->vetor_palavras.size(); i++) {
 		// Reconhecimento dos campos TEXT e DATA
 		if (this->vetor_palavras.at(i) == "SECTION") {
@@ -695,8 +695,21 @@ void Assembler::checaMneumonico(int *posicaotabela) {
         else if (this->vetor_palavras.at(i).find(":") != std::string::npos)
         {
 			//this->linha_coluna_contador--;
+			if (this->vetor_palavras.at(i+1) == "SPACE") {
+				//valor a ser passado para procuraPendencias que sinaliza que o rotulo eh tipo SPACE
+				flagtipo = 0;
+			}
+
+			else if (this->vetor_palavras.at(i + 1) == "CONST") {
+				//valor a ser passado para procuraPendencias que sinaliza que o rotulo eh tipo CONST
+				flagtipo = 1;
+			}
+			else {
+				//valor a ser passado para procuraPendencias que sinaliza que o rotulo eh tipo Rotulo para JMP
+				flagtipo = 2;
+			}
             this->apoio = this->vetor_palavras.at(i).substr(0, this->vetor_palavras.at(i).find(":"));
-            tabela_de_simbolos->procuraPendencias(this->apoio, this->linha_coluna_contador, &this->opcodes);
+            tabela_de_simbolos->procuraPendencias(this->apoio, this->linha_coluna_contador, &this->opcodes, flagtipo);
             posicaotabela--;
 		}
         //label nao definida
@@ -728,13 +741,13 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
             // Logica para lidar com vetores no unico operando
 			if (this->vetor_palavras.at(*posicao_da_palavra + 1).find("+") != std::string::npos) {
 				aux = this->vetor_palavras.at(*posicao_da_palavra + 1).substr(0, this->vetor_palavras.at(*posicao_da_palavra + 1).find("+"));
-				aux = this->tabela_de_simbolos->procuraElemento(aux, this->linha_coluna_contador);
+				aux = this->tabela_de_simbolos->procuraElemento(aux, this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra));
 				auxint = stoi(aux) + stoi(vetor_palavras.at(*posicao_da_palavra + 1).substr(this->vetor_palavras.at(*posicao_da_palavra + 1).find("+")+1, this->vetor_palavras.at(*posicao_da_palavra + 1).size()-1));
 				aux = to_string(auxint);
 				this->opcodes.push_back(aux);
 			}
 			else {
-				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->linha_coluna_contador);
+				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra));
 				this->opcodes.push_back(aux);
             }
 			this->linha_coluna_contador++;
@@ -749,13 +762,13 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
             // Logica para lidar com vetores no primeiro operando
             if (this->vetor_palavras.at(*posicao_da_palavra + 1).find("+") != std::string::npos) {
 				aux = this->vetor_palavras.at(*posicao_da_palavra + 1).substr(0, this->vetor_palavras.at(*posicao_da_palavra + 1).find("+"));
-				aux = this->tabela_de_simbolos->procuraElemento(aux, this->linha_coluna_contador);
+				aux = this->tabela_de_simbolos->procuraElemento(aux, this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra));
 				auxint = stoi(aux) + stoi(vetor_palavras.at(*posicao_da_palavra + 1).substr(this->vetor_palavras.at(*posicao_da_palavra + 1).find("+") + 1, this->vetor_palavras.at(*posicao_da_palavra + 1).size() - 1));
 				aux = to_string(auxint);
 				this->opcodes.push_back(aux);
 			}
 			else {
-				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->linha_coluna_contador);
+				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra));
 				this->opcodes.push_back(aux);
 			}
 
@@ -764,13 +777,13 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
             // Logica para lidar com vetores no segundo operando
             if (this->vetor_palavras.at(*posicao_da_palavra + 2).find("+") != std::string::npos) {
 				aux = this->vetor_palavras.at(*posicao_da_palavra + 2).substr(0, this->vetor_palavras.at(*posicao_da_palavra + 2).find("+"));
-				aux = this->tabela_de_simbolos->procuraElemento(aux, this->linha_coluna_contador);
+				aux = this->tabela_de_simbolos->procuraElemento(aux, this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra));
 				auxint = stoi(aux) + stoi(vetor_palavras.at(*posicao_da_palavra + 2).substr(this->vetor_palavras.at(*posicao_da_palavra + 2).find("+") + 1, this->vetor_palavras.at(*posicao_da_palavra + 2).size() - 1));
 				aux = to_string(auxint);
 				this->opcodes.push_back(aux);
 			}
 			else {
-				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 2), this->linha_coluna_contador);
+				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 2), this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra));
 				this->opcodes.push_back(aux);
 			}
 
