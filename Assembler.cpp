@@ -340,7 +340,7 @@ void Assembler::passagemUm(){
         cout << "Erro semantico: Secao TEXT faltante" << endl;
     }
 
-	cout << saida << endl;
+	//cout << saida << endl;
 
     codigoObjeto << saida;
     codigoObjeto.close();          // Fecha o arquivo com o codigo fonte
