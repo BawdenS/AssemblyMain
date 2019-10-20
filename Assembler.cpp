@@ -88,6 +88,11 @@ void Assembler::passagemZero() {
 			// Trata o caso de achar uma virgula
 			for (i = 0; i < vetor_palavras.size(); i++)
 			{
+				if (vetor_palavras.at(i).find("0X") != std::string::npos)
+				{
+					vetor_palavras.at(i) = this->hexad(vetor_palavras.at(i));
+				}
+
 				if (vetor_palavras.at(i).find(",") != std::string::npos)
 				{
 					apoio = vetor_palavras.at(i).substr(vetor_palavras.at(i).find(",") + 1, vetor_palavras.at(i).size()-1);
@@ -197,6 +202,98 @@ void Assembler::criaListas() {
     this->lista_de_opcode.push_back("STOP");
 }
 
+/*******************************************************************
+ * Funcao que transforma hexadecimal em decimal *
+ ******************************************************************/
+
+string Assembler::hexad(string word) {
+	int numero, contaconta, j, i = 0;
+	int eax, saida = 0;
+
+	word = word.substr(2, word.size());
+
+
+	for (j = word.size() - 1; j != -1; j--)
+	{
+		if (word.at(j) == 'A') {
+			contaconta = 0;
+			eax = 10;
+			while (contaconta < i)
+			{
+				eax = eax * 16;
+				contaconta++;
+			}
+			saida += eax;
+		}
+		else if (word.at(j) == 'B') {
+			contaconta = 0;
+			eax = 11;
+			while (contaconta < i)
+			{
+				eax = eax * 16;
+				contaconta++;
+			}
+			saida += eax;
+		}
+		else if (word.at(j) == 'C') {
+			contaconta = 0;
+			eax = 12;
+			while (contaconta < i)
+			{
+				eax = eax * 16;
+				contaconta++;
+			}
+			saida += eax;
+		}
+		else if (word.at(j) == 'D') {
+			contaconta = 0;
+			eax = 13;
+			while (contaconta < i)
+			{
+				eax = eax * 16;
+				contaconta++;
+			}
+			saida += eax;
+		}
+		else if (word.at(j) == 'E') {
+			contaconta = 0;
+			eax = 14;
+			while (contaconta < i)
+			{
+				eax = eax * 16;
+				contaconta++;
+			}
+			saida += eax;
+		}
+		else if (word.at(j) == 'F') {
+			contaconta = 0;
+			eax = 15;
+			while (contaconta < i)
+			{
+				eax = eax * 16;
+				contaconta++;
+			}
+			saida += eax;
+		}
+		else {
+
+			contaconta = 0;
+			eax = word.at(j) - 48;
+
+			while (contaconta < i)
+			{
+				eax = eax * 16;
+				contaconta++;
+			}
+			saida += eax;
+
+		}
+		i++;
+	}
+
+
+	return to_string(saida);
+}
 
 /***********************************************
  * Funcao que separa as palavras de cada linha *
