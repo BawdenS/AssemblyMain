@@ -11,14 +11,15 @@ public:
     TabelaDeSimbolos();
     ~TabelaDeSimbolos();
     void elementoDefinido(string nome, int posicao, string tipo);    // funcao que acrescenta um elemento na tabela de simbolos
-    string procuraElemento(string nome, int posicao, string anterior);     // funcao que procura string atual na tabela de simbolos
-    void procuraPendencias(string nome, int posicao, vector<string>* opcodes, int flagtipo, int tamanho);
-
+    string procuraElemento(string nome, int posicao, string anterior, int linha);     // funcao que procura string atual na tabela de simbolos
+    void procuraPendencias(string nome, int posicao, vector<string>* opcodes, int flagtipo, int tamanho, int linha);
+	vector<bool> definido;
+	vector<vector<int>> lista_de_pendencias;
 private:
     vector<string> lista_de_nomes;
-    vector<vector<int>> lista_de_pendencias;
+    
     vector<int> endereco;
-    vector<bool> definido;
+    
 	vector<string> tipo;
 };
 

@@ -30,6 +30,12 @@ void Assembler::assemble() {
 
     // Chama a funcao da primeira passagem de fato
     this->passagemUm("Codigo Pre-Processado.txt");
+	int i;
+	for (i = 0; i < this->tabela_de_simbolos->definido.size();i++) {
+		if (this->tabela_de_simbolos->definido.at(i) == false) {
+			cout <<" Erro semantico rotulo nao definido" << endl;
+		}
+	}
 }
 
 
@@ -334,7 +340,8 @@ void Assembler::passagemUm(string preProcessado){
     }
 
     // todo - remover esse cout na versao final
-    cout << saida;
+	cout << saida << endl;
+
     codigoObjeto << saida;
     codigoObjeto.close();          // Fecha o arquivo com o codigo fonte
 }
@@ -376,7 +383,9 @@ void Assembler::checaMneumonico(int *posicaotabela) {
         else if (this->vetor_palavras.at(i) == "CONST") {
 			this->linha_coluna_contador++;
 			this->opcodes.push_back(this->vetor_palavras.at(i + 1));
-
+			if (this->vetor_palavras.at(i+1) == "0") {
+				cout << "Erro semantico linha: "<< pc_pre_processado << "  tentativa de dividir por 0" << endl;
+			}
             // Erro de diretiva na secao errada
             // Secao DATA posterior a secao TEXT
             if(data_field_start > text_field_start){
@@ -704,7 +713,6 @@ void Assembler::checaMneumonico(int *posicaotabela) {
 					tamanho = stoi(this->vetor_palavras.at(i + 2)) - 1;
 				
 				}
-				//cout << "TAMANHO DO VETOR:  " << tamanho << endl;
 			}
 
 			else if (this->vetor_palavras.at(i + 1) == "CONST") {
@@ -718,7 +726,7 @@ void Assembler::checaMneumonico(int *posicaotabela) {
 				tamanho = 1;
 			}
             this->apoio = this->vetor_palavras.at(i).substr(0, this->vetor_palavras.at(i).find(":"));
-            tabela_de_simbolos->procuraPendencias(this->apoio, this->linha_coluna_contador, &this->opcodes, flagtipo, tamanho);
+            tabela_de_simbolos->procuraPendencias(this->apoio, this->linha_coluna_contador, &this->opcodes, flagtipo, tamanho, pc_pre_processado);
             posicaotabela--;
 		}
         //label nao definida
@@ -750,13 +758,13 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
             // Logica para lidar com vetores no unico operando
 			if (this->vetor_palavras.at(*posicao_da_palavra + 1).find("+") != std::string::npos) {
 				aux = this->vetor_palavras.at(*posicao_da_palavra + 1).substr(0, this->vetor_palavras.at(*posicao_da_palavra + 1).find("+"));
-				aux = this->tabela_de_simbolos->procuraElemento(aux, this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra));
+				aux = this->tabela_de_simbolos->procuraElemento(aux, this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra), pc_pre_processado);
 				auxint = stoi(aux) + stoi(vetor_palavras.at(*posicao_da_palavra + 1).substr(this->vetor_palavras.at(*posicao_da_palavra + 1).find("+")+1, this->vetor_palavras.at(*posicao_da_palavra + 1).size()-1));
 				aux = to_string(auxint);
 				this->opcodes.push_back(aux);
 			}
 			else {
-				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra));
+				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra), pc_pre_processado);
 				this->opcodes.push_back(aux);
             }
 			this->linha_coluna_contador++;
@@ -771,13 +779,13 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
             // Logica para lidar com vetores no primeiro operando
             if (this->vetor_palavras.at(*posicao_da_palavra + 1).find("+") != std::string::npos) {
 				aux = this->vetor_palavras.at(*posicao_da_palavra + 1).substr(0, this->vetor_palavras.at(*posicao_da_palavra + 1).find("+"));
-				aux = this->tabela_de_simbolos->procuraElemento(aux, this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra));
+				aux = this->tabela_de_simbolos->procuraElemento(aux, this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra), pc_pre_processado);
 				auxint = stoi(aux) + stoi(vetor_palavras.at(*posicao_da_palavra + 1).substr(this->vetor_palavras.at(*posicao_da_palavra + 1).find("+") + 1, this->vetor_palavras.at(*posicao_da_palavra + 1).size() - 1));
 				aux = to_string(auxint);
 				this->opcodes.push_back(aux);
 			}
 			else {
-				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra));
+				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 1), this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra), pc_pre_processado);
 				this->opcodes.push_back(aux);
 			}
 
@@ -786,13 +794,13 @@ void Assembler::trataErros(int *posicao_da_palavra, int n_operandos) {
             // Logica para lidar com vetores no segundo operando
             if (this->vetor_palavras.at(*posicao_da_palavra + 2).find("+") != std::string::npos) {
 				aux = this->vetor_palavras.at(*posicao_da_palavra + 2).substr(0, this->vetor_palavras.at(*posicao_da_palavra + 2).find("+"));
-				aux = this->tabela_de_simbolos->procuraElemento(aux, this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra));
+				aux = this->tabela_de_simbolos->procuraElemento(aux, this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra), pc_pre_processado);
 				auxint = stoi(aux) + stoi(vetor_palavras.at(*posicao_da_palavra + 2).substr(this->vetor_palavras.at(*posicao_da_palavra + 2).find("+") + 1, this->vetor_palavras.at(*posicao_da_palavra + 2).size() - 1));
 				aux = to_string(auxint);
 				this->opcodes.push_back(aux);
 			}
 			else {
-				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 2), this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra));
+				aux = this->tabela_de_simbolos->procuraElemento(this->vetor_palavras.at(*posicao_da_palavra + 2), this->linha_coluna_contador, this->vetor_palavras.at(*posicao_da_palavra), pc_pre_processado);
 				this->opcodes.push_back(aux);
 			}
 

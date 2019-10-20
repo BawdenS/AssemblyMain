@@ -33,7 +33,7 @@ void TabelaDeSimbolos::elementoDefinido(string nome, int posicao, string tipo) {
  * Funcao que procura string atual na tabela de simbolos *
  ********************************************************/
 //todo PASSAR VALOR DA LINHA TBM
-string TabelaDeSimbolos::procuraElemento(string nome, int posicao, string anterior) {
+string TabelaDeSimbolos::procuraElemento(string nome, int posicao, string anterior, int linha) {
     int i, numero = 0;
     bool igual = false;
 	
@@ -47,14 +47,53 @@ string TabelaDeSimbolos::procuraElemento(string nome, int posicao, string anteri
     if (igual == true) {
 		if (this->definido.at(numero) == true) {
 			//todo cout que fala os erros de substituicao
+
+			if (anterior == "ADD" && this->tipo.at(numero) == "ROTULO") {
+				cout << "ERRO SEMANTICO LINHA : " << linha  << endl;
+			}
+			if (anterior == "SUB" && this->tipo.at(numero) == "ROTULO") {
+				cout << "ERRO SEMANTICO LINHA : " << linha << endl;
+			}
+			if (anterior == "DIV" && this->tipo.at(numero) == "ROTULO") {
+				cout << "ERRO SEMANTICO LINHA : " << linha << endl;
+			}
+			if (anterior == "MULT" && this->tipo.at(numero) == "ROTULO") {
+				cout << "ERRO SEMANTICO LINHA : " << linha << endl;
+			}
+			if (anterior == "COPY" && this->tipo.at(numero) == "ROTULO") {
+				cout << "ERRO SEMANTICO LINHA : " << linha << endl;
+			}
+			if (anterior == "LOAD" && this->tipo.at(numero) == "ROTULO") {
+				cout << "ERRO SEMANTICO LINHA : " << linha << endl;
+			}
+			if (anterior == "STORE" && this->tipo.at(numero) == "ROTULO") {
+				cout << "ERRO SEMANTICO LINHA : " << linha << endl;
+			}
+			if (anterior == "INPUT" && this->tipo.at(numero) == "ROTULO") {
+				cout << "ERRO SEMANTICO LINHA : " << linha << endl;
+			}
+			if (anterior == "OUTPUT" && this->tipo.at(numero) == "ROTULO") {
+				cout << "ERRO SEMANTICO LINHA : " << linha << endl;
+			}
+
 			if (anterior == "STORE" && this->tipo.at(numero) == "CONST") {
-				cout << "ERRO SEMANTICO LINHA : TENTATIVA DE ALTERAR VALOR CONST" << endl;
+				cout << "ERRO SEMANTICO LINHA : "<< linha <<  " TENTATIVA DE ALTERAR VALOR CONST" << endl;
 			}
 			if (anterior == "JMP" && this->tipo.at(numero) != "ROTULO") {
-				cout << "ERRO SEMANTICO LINHA : USO DE JMP ERRADO" << endl;
+				cout << "ERRO SEMANTICO LINHA : " << linha << "  USO DE JMP ERRADO" << endl;
+			}
+			if (anterior == "JMPN" && this->tipo.at(numero) != "ROTULO") {
+				cout << "ERRO SEMANTICO LINHA : " << linha << " USO DE JMP ERRADO" << endl;
+			}
+			if (anterior == "JMPP" && this->tipo.at(numero) != "ROTULO") {
+				cout << "ERRO SEMANTICO LINHA : " << linha << " USO DE JMP ERRADO" << endl;
+			}
+			if (anterior == "JMPZ" && this->tipo.at(numero) != "ROTULO") {
+				cout << "ERRO SEMANTICO LINHA : " << linha << " USO DE JMP ERRADO" << endl;
 			}
 			return to_string(this->endereco.at(numero));
 		}
+
 		else {
 			this->lista_de_pendencias.at(numero).push_back(posicao);
 			return "0";
@@ -76,7 +115,7 @@ string TabelaDeSimbolos::procuraElemento(string nome, int posicao, string anteri
  * Funcao que procura alguma pendencia de endereco no codigo *
  ************************************************************/
 //todo passar tamanho tbm, geralmente 1
-void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string>* opcodes, int flagtipos, int tamanho) {
+void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string>* opcodes, int flagtipos, int tamanho, int linha) {
     int i, numero = 0, auxint = 0;
     bool igual = false;
 	string aux;
@@ -99,15 +138,84 @@ void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string
         }
     }
     if (igual == true) {
-		//todo aqui eh quase impossivel saber em que linha esta o erro
-		cout << "NOME: "<< this->lista_de_nomes.at(numero) << "  TIPO:  "<< aux << endl;
-		while (!this->lista_de_pendencias.at(numero).empty()) {
-			this->endereco.at(numero) = posicao;
-			auxint = stoi(opcodes->at(this->lista_de_pendencias.at(numero).back()));
-			//todo se auxint for maior que space 4
-			opcodes->at(this->lista_de_pendencias.at(numero).back()) = to_string(posicao + auxint);
-			this->lista_de_pendencias.at(numero).pop_back();
+		if (this->definido.at(numero) == true) {
+			cout << "Erro semantico linha: " << linha << endl;
 		}
+		else {
+			while (!this->lista_de_pendencias.at(numero).empty()) {
+				this->endereco.at(numero) = posicao;
+				this->definido.at(numero) = true;
+				auxint = stoi(opcodes->at(this->lista_de_pendencias.at(numero).back()));
+
+				if (auxint > tamanho) {
+					cout << "Erro semantico linha:  " << this->lista_de_pendencias.at(numero).back() / 2 << "  ACESSANDO O QUE NAO PODE!!" << endl;
+				}
+
+				auxint = stoi(opcodes->at(this->lista_de_pendencias.at(numero).back() - 1));
+
+				if (auxint == 1 && aux == "ROTULO") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;
+
+				}
+				if (auxint == 2 && aux == "ROTULO") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;
+
+				}
+				if (auxint == 3 && aux == "ROTULO") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;
+
+				}
+				if (auxint == 4 && aux == "ROTULO") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;
+
+				}
+				if (auxint == 9 && aux == "ROTULO") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;
+
+				}
+				if (auxint == 10 && aux == "ROTULO") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;
+
+				}
+				if (auxint == 11 && aux == "ROTULO") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;
+
+				}
+				if (auxint == 12 && aux == "ROTULO") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;
+
+				}
+				if (auxint == 13 && aux == "ROTULO") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;
+
+				}
+
+				if (auxint == 5 && aux != "ROTULO") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1<< endl;
+
+				}
+				if (auxint == 6 && aux != "ROTULO") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1<< endl;
+
+				}if (auxint == 7 && aux != "ROTULO") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1<< endl;
+
+				}if (auxint == 8 && aux != "ROTULO") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1<< endl;
+
+				}if (auxint == 11 && aux == "CONST") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;
+
+				}
+
+				opcodes->at(this->lista_de_pendencias.at(numero).back()) = to_string(posicao + auxint);
+				this->lista_de_pendencias.at(numero).pop_back();
+			}
+
+		}
+		//todo aqui eh quase impossivel saber em que linha esta o erro
+		//cout << "NOME: "<< this->lista_de_nomes.at(numero) << "  TIPO:  "<< aux << endl;
+		
     }
     
     //Adciona novo elemento
