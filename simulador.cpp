@@ -1,15 +1,14 @@
-// Simulator.cpp : Este arquivo contém a função 'main'. A execução do programa começa e termina ali.
-//
-
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <vector>
 #include <sstream>
+
 using namespace std;
-int main(int Nargumentos, char*Argumentos[])
+
+int main(int Nargumentos, char* Argumentos[])
 {
-	int i, Auxiliar,Acumulador = 0;
+	int i, Acumulador = 0;
 
 	string NomeArquivo = Argumentos[1];
 	string Linha, Word;
@@ -39,29 +38,29 @@ int main(int Nargumentos, char*Argumentos[])
 			cout << "Acumulador: " << Acumulador << endl;
 		}
 		//SUB
-		if (Unidade.at(i) == 2) {
+		else if(Unidade.at(i) == 2) {
 			Acumulador -= Unidade.at(Unidade.at(i + 1));
 			i++;
 			cout << "Acumulador: " << Acumulador << endl;
 		}
 		//MULT
-		if (Unidade.at(i) == 3) {
+		else if(Unidade.at(i) == 3) {
 			Acumulador *= Unidade.at(Unidade.at(i + 1));
 			i++;
 			cout << "Acumulador: " << Acumulador << endl;
 		}
 		//DIV
-		if (Unidade.at(i) == 4) {
+		else if(Unidade.at(i) == 4) {
 			Acumulador /= Unidade.at(Unidade.at(i + 1));
 			i++;
 			cout << "Acumulador: " << Acumulador << endl;
 		}
 		//JMP
-		if (Unidade.at(i) == 5) {
+		else if(Unidade.at(i) == 5) {
 			i = Unidade.at(i++);
 		}
 		//JMPN
-		if (Unidade.at(i) == 6) {
+		else if(Unidade.at(i) == 6) {
 			if (Acumulador < 0) {
 				i = Unidade.at(i++);
 			}
@@ -71,7 +70,7 @@ int main(int Nargumentos, char*Argumentos[])
 			}
 		}
 		//JMPP
-		if (Unidade.at(i) == 7) {
+		else if(Unidade.at(i) == 7) {
 			if (Acumulador > 0) {
 				i = Unidade.at(i++);
 			}
@@ -81,7 +80,7 @@ int main(int Nargumentos, char*Argumentos[])
 			}
 		}
 		//JMPZ
-		if (Unidade.at(i) == 8) {
+		else if(Unidade.at(i) == 8) {
 			if (Acumulador == 0) {
 				i = Unidade.at(i++);
 			}
@@ -91,35 +90,35 @@ int main(int Nargumentos, char*Argumentos[])
 			}
 		}
 		//COPY
-		if (Unidade.at(i) == 9) {
+		else if(Unidade.at(i) == 9) {
 			Unidade.at(Unidade.at(i + 2)) = Unidade.at(Unidade.at(i + 1));
 			i++;
 			i++;
 		}
 		//LOAD
-		if (Unidade.at(i) == 10) {
+		else if(Unidade.at(i) == 10) {
 			Acumulador = Unidade.at(Unidade.at(i + 1));
 			i++;
 			cout << "Acumulador: "<< Acumulador << endl;
 		}
 		//STORE
-		if (Unidade.at(i) == 11) {
+		else if(Unidade.at(i) == 11) {
 			Unidade.at(Unidade.at(i + 1)) = Acumulador;
 			cout << "Memoria em: "<< Unidade.at(i + 1) << " Alterada para: " << Acumulador << endl;
 		}
 		//INPUT
-		if (Unidade.at(i) == 12) {
+		else if(Unidade.at(i) == 12) {
 			cout << "Favor Inserir Valor numerico: "<< endl;
 			cin >> Unidade.at(Unidade.at(i + 1));
 			i++;
 		}
 		//OUTPUT
-		if (Unidade.at(i) == 13) {
+		else if(Unidade.at(i) == 13) {
 			cout << "O Valor de Saida eh:" << Unidade.at(Unidade.at(i + 1)) << endl;
 			i++;
 		}
 		//STOP
-		if (Unidade.at(i) == 14) {
+		else if(Unidade.at(i) == 14) {
 			cout << "Fim do programa" <<endl;
 			return 0;
 		}

@@ -13,12 +13,14 @@
 ###################################################################*/
 
 #include "Assembler.h"
+#include <string>
 
 using namespace std;
 
-int main(int argc, char* arv[]) {
+int main(int argc, char* argv[]) {
+    string filepath = argv[1];
 
-	Assembler* assembler = new Assembler("teste.txt");
+	Assembler* assembler = new Assembler(filepath);
 	assembler->assemble();
 
 	return 0;

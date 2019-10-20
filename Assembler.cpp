@@ -7,6 +7,8 @@ using namespace std;
  *************/
 Assembler::Assembler(string caminho_do_arquivo) {
     this->file_path = caminho_do_arquivo;          // file_path da instancia recebe o file_path informado ao instanciar o objeto
+    this->file_pre = this->file_path.substr(0,this->file_path.find(".asm"))+".pre";
+    this->file_obj = this->file_path.substr(0, this->file_path.find(".asm"))+".obj";
     this->pc_codigo_fonte = 1;
     this->pc_pre_processado = 1;
     this->flag_salva_linha = 1;
@@ -29,7 +31,7 @@ void Assembler::assemble() {
     this->passagemZero();
 
     // Chama a funcao da primeira passagem de fato
-    this->passagemUm("Codigo Pre-Processado.txt");
+    this->passagemUm();
 	int i;
 	for (i = 0; i < this->tabela_de_simbolos->definido.size();i++) {
 		if (this->tabela_de_simbolos->definido.at(i) == false) {
@@ -52,7 +54,7 @@ void Assembler::passagemZero() {
 
     // Verifica se o arquivo com o codigo fonte foi, de fato, aberto
     if(codigoFonte.is_open()){
-        preProcessado.open("Codigo Pre-processado.txt");    // Cria o arquivo texto que contera o codigo pre-processado
+        preProcessado.open(this->file_pre);    // Cria o arquivo texto que contera o codigo pre-processado
 
         while(!codigoFonte.eof()){
             getline(codigoFonte, this->line);        // Le cada linha do codigo fonte
@@ -304,13 +306,13 @@ string Assembler::hexad(string word) {
 /***********************************************
  * Funcao que separa as palavras de cada linha *
  **********************************************/
-void Assembler::passagemUm(string preProcessado){
+void Assembler::passagemUm(){
     int i = 0, posicaotabela = 0;
 
 	this->linha_coluna_contador = 0;
 
-    ifstream codigoPreProcessado("Codigo Pre-processado.txt");     // Abre o arquivo que contem o codigo pre-processado
-    ofstream codigoObjeto("Codigo Objeto.txt");     // Abre o arquivo texto que contera o codigo objeto
+    ifstream codigoPreProcessado(this->file_pre);     // Abre o arquivo que contem o codigo pre-processado
+    ofstream codigoObjeto(this->file_obj);     // Abre o arquivo texto que contera o codigo objeto
 
     // Pega cada palavra separada por espaco
     while (getline(codigoPreProcessado, this->line)) {
@@ -335,11 +337,9 @@ void Assembler::passagemUm(string preProcessado){
 
     // Erro de secao TEXT faltante
     if(!section_text_present){
-        // todo - ter certeza de qual o tipo desse erro
-        cout << "Erro semantico???: Secao TEXT faltante" << endl;
+        cout << "Erro semantico: Secao TEXT faltante" << endl;
     }
 
-    // todo - remover esse cout na versao final
 	cout << saida << endl;
 
     codigoObjeto << saida;
@@ -356,25 +356,21 @@ void Assembler::checaMneumonico(int *posicaotabela) {
     for (i = 0; i < this->vetor_palavras.size(); i++) {
 		// Reconhecimento dos campos TEXT e DATA
 		if (this->vetor_palavras.at(i) == "SECTION") {
-            // todo - tratar o erro de ter apenas SECTION, ou seja, nao existir a posicao i+1 nessa linha
             if(this->vetor_palavras.size() > i+1){
                 if (this->vetor_palavras.at(i + 1) == "TEXT") {
                     this->text_field_start = this->pc_pre_processado;
                     section_text_present = true;
-//				cout << "Campo Text comeca na linha " << this->text_field_start << endl;
                 }
                 else if (this->vetor_palavras.at(i + 1) == "DATA") {
                     this->data_field_start = this->pc_pre_processado;
-//				cout << "Campo Data comeca na linha " << this->data_field_start << endl;
                 }
                 else
                 {
-                    // todo - ter certeza de qual o tipo desse erro
-                    cout << "Linha " << pc_pre_processado << "; Erro semantico???: Secao invalido" << endl;
+                    cout << "Linha " << pc_pre_processado << "; Erro semantico: Secao invalido" << endl;
                 }
             }
             else{
-                cout << "Linha " << pc_pre_processado << "; Erro semantico???: Secao invalido" << endl;
+                cout << "Linha " << pc_pre_processado << "; Erro semantico: Secao invalido" << endl;
             }
 
             i++;    // pula palavra posterior (no caso TEXT ou DATA)
