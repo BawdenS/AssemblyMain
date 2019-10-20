@@ -345,7 +345,7 @@ void Assembler::passagemUm(string preProcessado){
  ************************************************/
 void Assembler::checaMneumonico(int *posicaotabela) {
     int i,j;
-	int flagtipo;
+	int flagtipo, tamanho;
     for (i = 0; i < this->vetor_palavras.size(); i++) {
 		// Reconhecimento dos campos TEXT e DATA
 		if (this->vetor_palavras.at(i) == "SECTION") {
@@ -698,18 +698,27 @@ void Assembler::checaMneumonico(int *posicaotabela) {
 			if (this->vetor_palavras.at(i+1) == "SPACE") {
 				//valor a ser passado para procuraPendencias que sinaliza que o rotulo eh tipo SPACE
 				flagtipo = 0;
+				tamanho = 1;
+				//se tem space vetorizado conserta o valor de tamanho
+				if (this->vetor_palavras.size() == 3) {
+					tamanho = stoi(this->vetor_palavras.at(i + 2)) - 1;
+				
+				}
+				//cout << "TAMANHO DO VETOR:  " << tamanho << endl;
 			}
 
 			else if (this->vetor_palavras.at(i + 1) == "CONST") {
 				//valor a ser passado para procuraPendencias que sinaliza que o rotulo eh tipo CONST
 				flagtipo = 1;
+				tamanho = 1;
 			}
 			else {
 				//valor a ser passado para procuraPendencias que sinaliza que o rotulo eh tipo Rotulo para JMP
 				flagtipo = 2;
+				tamanho = 1;
 			}
             this->apoio = this->vetor_palavras.at(i).substr(0, this->vetor_palavras.at(i).find(":"));
-            tabela_de_simbolos->procuraPendencias(this->apoio, this->linha_coluna_contador, &this->opcodes, flagtipo);
+            tabela_de_simbolos->procuraPendencias(this->apoio, this->linha_coluna_contador, &this->opcodes, flagtipo, tamanho);
             posicaotabela--;
 		}
         //label nao definida

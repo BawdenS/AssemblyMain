@@ -32,6 +32,7 @@ void TabelaDeSimbolos::elementoDefinido(string nome, int posicao, string tipo) {
 /*********************************************************
  * Funcao que procura string atual na tabela de simbolos *
  ********************************************************/
+//todo PASSAR VALOR DA LINHA TBM
 string TabelaDeSimbolos::procuraElemento(string nome, int posicao, string anterior) {
     int i, numero = 0;
     bool igual = false;
@@ -48,6 +49,9 @@ string TabelaDeSimbolos::procuraElemento(string nome, int posicao, string anteri
 			//todo cout que fala os erros de substituicao
 			if (anterior == "STORE" && this->tipo.at(numero) == "CONST") {
 				cout << "ERRO SEMANTICO LINHA : TENTATIVA DE ALTERAR VALOR CONST" << endl;
+			}
+			if (anterior == "JMP" && this->tipo.at(numero) != "ROTULO") {
+				cout << "ERRO SEMANTICO LINHA : USO DE JMP ERRADO" << endl;
 			}
 			return to_string(this->endereco.at(numero));
 		}
@@ -71,7 +75,8 @@ string TabelaDeSimbolos::procuraElemento(string nome, int posicao, string anteri
 /*************************************************************
  * Funcao que procura alguma pendencia de endereco no codigo *
  ************************************************************/
-void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string>* opcodes, int flagtipos) {
+//todo passar tamanho tbm, geralmente 1
+void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string>* opcodes, int flagtipos, int tamanho) {
     int i, numero = 0, auxint = 0;
     bool igual = false;
 	string aux;
@@ -94,10 +99,12 @@ void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string
         }
     }
     if (igual == true) {
+		//todo aqui eh quase impossivel saber em que linha esta o erro
 		cout << "NOME: "<< this->lista_de_nomes.at(numero) << "  TIPO:  "<< aux << endl;
 		while (!this->lista_de_pendencias.at(numero).empty()) {
 			this->endereco.at(numero) = posicao;
 			auxint = stoi(opcodes->at(this->lista_de_pendencias.at(numero).back()));
+			//todo se auxint for maior que space 4
 			opcodes->at(this->lista_de_pendencias.at(numero).back()) = to_string(posicao + auxint);
 			this->lista_de_pendencias.at(numero).pop_back();
 		}
