@@ -45,6 +45,9 @@ string TabelaDeSimbolos::procuraElemento(string nome, int posicao, string anteri
     }
     if (igual == true) {
 		if (this->definido.at(numero) == true) {
+			if (anterior == "INPUT" && this->tipo.at(numero) == "CONST") {
+				cout << "ERRO SEMANTICO LINHA : " << linha  << endl;
+			}
 			if (anterior == "ADD" && this->tipo.at(numero) == "ROTULO") {
 				cout << "ERRO SEMANTICO LINHA : " << linha  << endl;
 			}
@@ -148,6 +151,20 @@ void TabelaDeSimbolos::procuraPendencias(string nome, int posicao, vector<string
 				}
 
 				auxint = stoi(opcodes->at(this->lista_de_pendencias.at(numero).back() - 1));
+				if (auxint == 12 && aux == "CONST") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;
+
+				}
+				if (auxint == 11 && aux == "CONST") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;
+
+				}
+				if (auxint == 0 && aux == "CONST") {
+					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;
+
+				}
+
+
 
 				if (auxint == 1 && aux == "ROTULO") {
 					cout << "Erro semantico linha: " << this->lista_de_pendencias.at(numero).back() / 2 + 1 << endl;

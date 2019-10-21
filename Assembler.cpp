@@ -32,12 +32,6 @@ void Assembler::assemble() {
 
     // Chama a funcao da primeira passagem de fato
     this->passagemUm();
-	int i;
-	for (i = 0; i < this->tabela_de_simbolos->definido.size();i++) {
-		if (this->tabela_de_simbolos->definido.at(i) == false) {
-			cout <<" Erro semantico rotulo nao definido" << endl;
-		}
-	}
 }
 
 
@@ -62,6 +56,14 @@ void Assembler::passagemZero() {
             this->padrao();                   // Chama a funcao para retirar comentarios
             this->pc_codigo_fonte++;          // Incrementa o contador de progama a cada linha do codigo fonte
 
+            if (this->line.find(":") != std::string::npos)
+				{
+                     if (this->line.rfind(":") != this->line.find(":"))
+				    {
+                        cout << "Erro semantico linha: "<< this-> pc_codigo_fonte << endl;
+				    }
+                    
+                }
             // Coloca cada palavra em um vetor de palavras.
             istringstream iss(this->line);
             while (iss >> this->line)
@@ -100,6 +102,7 @@ void Assembler::passagemZero() {
 				{
 					vetor_palavras.at(i) = this->hexad(vetor_palavras.at(i));
 				}
+                
 
 				if (vetor_palavras.at(i).find(",") != std::string::npos)
 				{
@@ -339,8 +342,16 @@ void Assembler::passagemUm(){
     if(!section_text_present){
         cout << "Erro semantico: Secao TEXT faltante" << endl;
     }
-
+    int j;
 	//cout << saida << endl;
+    for (i = 0; i < this->tabela_de_simbolos->definido.size();i++) {
+		if (this->tabela_de_simbolos->definido.at(i) == false) 
+        {	
+          for(j = 0;j<this->tabela_de_simbolos->lista_de_pendencias.at(i).size();j++){
+            cout <<" Erro semantico linha " << this->tabela_de_simbolos->lista_de_pendencias.at(j).back()/2 +2<< " rotulo nao definido" << endl;
+          }  
+		}
+	}
 
     codigoObjeto << saida;
     codigoObjeto.close();          // Fecha o arquivo com o codigo fonte
@@ -734,6 +745,7 @@ void Assembler::checaMneumonico(int *posicaotabela) {
         posicaotabela++;
 		
     }
+    //todo realizar mudança de assembly para ca
 }
 
 
